@@ -1,7 +1,5 @@
 package com.example.mastercode.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -16,7 +14,11 @@ public class Transaction implements Serializable {
     private double amount; // transaction amount
     @Column(name = "concept")
     private String concept;// transaction concept
-    @JsonBackReference
+//    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "id_enterprise")
+    private Enterprise enterprise;
+//    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_employee")
     private Employee employee;
@@ -26,9 +28,10 @@ public class Transaction implements Serializable {
     private LocalDate updated_at;  // transaction updated date
 
     //Constructor
-    public Transaction(double amount, String concept,  Employee employee, LocalDate created_at, LocalDate updated_at) {
+    public Transaction(double amount, String concept, Enterprise enterprise, Employee employee, LocalDate created_at, LocalDate updated_at) {
         this.amount = amount;
         this.concept = concept;
+        this.enterprise = enterprise;
         this.employee = employee;
         this.created_at = created_at;
         this.updated_at = updated_at;
@@ -59,6 +62,14 @@ public class Transaction implements Serializable {
 
     public void setConcept(String concept) {
         this.concept = concept;
+    }
+
+    public Enterprise getEnterprise() {
+        return enterprise;
+    }
+
+    public void setEnterprise(Enterprise enterprise) {
+        this.enterprise = enterprise;
     }
 
     public Employee getEmployee() {

@@ -1,8 +1,5 @@
 package com.example.mastercode.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -17,30 +14,28 @@ public class Employee implements Serializable {
     @Column(name = "email")
     private String email;//Employer email
     @OneToOne
-    @JoinColumn(name = "id_role",referencedColumnName = "idRole")
+    @JoinColumn(name = "id_role")
     private Roles roles;//Employer roles
     @OneToOne
-    @JoinColumn(name = "id_profile",referencedColumnName = "idProfile")
+    @JoinColumn(name = "id_profile")
     private Profile profile;//Employer profile
-    @JsonBackReference
-    @ManyToOne(targetEntity = Enterprise.class,cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_enterprice",referencedColumnName = "idEnterprise")
+//    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "id_enterprice")
     private Enterprise enterprise;//Employer enterprice
-    @JsonManagedReference
-    @OneToMany(mappedBy = "employee",targetEntity = Transaction.class,cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+    //    @JsonManagedReference
+    @OneToMany(mappedBy = "employee")
     private List<Transaction> transaction;
     @Column(name = "created_at")
     private LocalDate created_at;//Employer created date
     @Column(name = "updated_at")
     private LocalDate updated_at;//Employer updated date
 
-    public Employee(Long id, String email, Roles roles, Profile profile, Enterprise enterprise, List<Transaction> transaction, LocalDate created_at, LocalDate updated_at) {// se puede retirar el argumento de id; List<Transaction> transaction,
-        idEmployee = id;
+    public Employee(String email, Roles roles, Profile profile, Enterprise enterprise, LocalDate created_at, LocalDate updated_at) {// se puede retirar el argumento de id; List<Transaction> transaction,
         this.email = email;
         this.roles = roles;
         this.profile = profile;
         this.enterprise = enterprise;
-        this.transaction = transaction;
         this.created_at = created_at;
         this.updated_at = updated_at;
     }

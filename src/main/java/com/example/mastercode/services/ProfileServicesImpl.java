@@ -1,5 +1,6 @@
 package com.example.mastercode.services;
 
+import com.example.mastercode.dto.ProfileDto;
 import com.example.mastercode.entities.Profile;
 import com.example.mastercode.repositories.ProfileRepository;
 import com.example.mastercode.services.Interface.ProfileService;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfileServicesImpl implements ProfileService {
@@ -17,67 +19,90 @@ public class ProfileServicesImpl implements ProfileService {
         this.profileRepository = profileRepository;
     }
 
-    @Override
-    public List<Profile> findAll() throws Exception {
+    private ProfileDto convertEntityDto(Profile profile) {
+        ProfileDto profileDto = new ProfileDto();
 
-        try {
-
-            List <Profile> entities = profileRepository.findAll();
-            return entities;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        profileDto.setIdProfile(profile.getIdProfile());
+        profileDto.setName(profile.getName().concat(profile.getLastName()));
+        profileDto.setLastName(profile.getLastName());
+        profileDto.setAge(profile.getAge());
+        profileDto.setPhone(profile.getPhone());
+        profileDto.setCreated_at(profile.getCreated_at());
+        profileDto.setUpdated_at(profile.getUpdated_at());
+        return profileDto;
     }
 
     @Override
-    public Profile findById(Long id) throws Exception {
+    public List<ProfileDto> findAll() {
 
-        try {
-            Optional<Profile> entityOptional = profileRepository.findById(id);
-            return entityOptional.get();
-
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        return profileRepository.findAll()
+                .stream()
+                .map(this::convertEntityDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Profile create(Profile entity) throws Exception {
-        try {
-            entity = profileRepository.save(entity);
-            return entity;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+    public ProfileDto findById(Long idProfile) {
+
+        Optional<Profile> profile = profileRepository.findById(idProfile);
+        ProfileDto profileDto = new ProfileDto();
+
+        profileDto.setIdProfile(profile.get().getIdProfile());
+        profileDto.setName(profile.get().getName().concat(profile.get().getLastName()));
+        profileDto.setLastName(profile.get().getLastName());
+        profileDto.setAge(profile.get().getAge());
+        profileDto.setPhone(profile.get().getPhone());
+        profileDto.setCreated_at(profile.get().getCreated_at());
+        profileDto.setUpdated_at(profile.get().getUpdated_at());
+
+
+        return profileDto;
     }
 
     @Override
-    public Profile update(Long id, Profile entity) throws Exception {
-        try {
-            Optional<Profile> profileOptional = profileRepository.findById(id);
-            Profile profileUpdate = profileOptional.get();
-            profileUpdate = profileRepository.save(entity);
-            return profileUpdate;
+    public Profile create(Profile entity) {
 
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        entity = profileRepository.save(entity);
+        return entity;
     }
 
     @Override
-    public boolean delete(Long id) throws Exception {
+    public Profile update(Long id, Profile entity) {
 
-        try {
-            if (profileRepository.existsById(id)) {
-                profileRepository.deleteById(id);
-                return true;
-            } else {
-                throw new Exception();
-            }
+        Optional<Profile> profileUpdate = profileRepository.findById(id);
 
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+        Profile profile = profileUpdate.get();
+
+        if (entity.getName() != null) {
+            profile.setName(entity.getName());
         }
+        if (entity.getLastName() != null) {
+            profile.setLastName(entity.getLastName());
+        }
+        if (entity.getAge() != null) {
+            profile.setAge(entity.getAge());
+        }
+        if (entity.getPhone() != null) {
+            profile.setPhone(entity.getPhone());
+        }
+        if (entity.getCreated_at() != null) {
+            profile.setCreated_at(entity.getCreated_at());
+        }
+        if (entity.getUpdated_at() != null) {
+            profile.setUpdated_at(entity.getUpdated_at());
+        }
+
+        return profileRepository.save(profile);
+    }
+
+    @Override
+    public boolean delete(Long id) {
+
+
+        profileRepository.deleteById(id);
+        return true;
+
+
     }
 
 }

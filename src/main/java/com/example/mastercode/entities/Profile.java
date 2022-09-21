@@ -12,10 +12,10 @@ public class Profile implements Serializable {
     private Long idProfile;//profile id
     @Column(name = "name")
     private String name;//profile name
-    @Column(name = "email")
+    @Column(name = "last_name")
     private String lastName;//profile last name
     @Column(name = "age")
-    private int age;//profile age
+    private Integer age;//profile age
     @Column(name = "phone")
     private String phone;//profile phone
     @Column(name = "created_at")
@@ -23,8 +23,7 @@ public class Profile implements Serializable {
     @Column(name = "updated_at")
     private LocalDate updated_at;//profile updated date
 
-    public Profile(Long id, String name, String lastName, int age, String phone, LocalDate created_at, LocalDate updated_at) {
-        this.idProfile = id;
+    public Profile(String name, String lastName, Integer age, String phone, LocalDate created_at, LocalDate updated_at) {
         this.name = name;
         this.lastName = lastName;
         this.age = age;
@@ -61,11 +60,11 @@ public class Profile implements Serializable {
         this.lastName = lastName;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

@@ -5,10 +5,14 @@ import com.example.mastercode.entities.Employee;
 import com.example.mastercode.repositories.EmployeeRepository;
 import com.example.mastercode.services.Interface.EmployeeService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -19,94 +23,117 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    @Override
-    public List<Employee> findAll() throws Exception {
 
-        try {
+    private EmployeeDto convertEntityDto(Employee employee) {
 
-            List<Employee> entities = employeeRepository.findAll();
-            return entities;
+        Optional<Employee> employees = employeeRepository.findById(employee.getIdEmployee());
+        List<Long> idTransactions = new ArrayList<>();
+        employees.get().getTransaction().forEach((t) -> {
+            idTransactions.add(t.getIdTransaction());
+        });
 
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        EmployeeDto employeeDto = new EmployeeDto();
 
+        employeeDto.setIdEmployee(employee.getIdEmployee());
+        employeeDto.setEmployeeName(employee.getProfile().getName());
+        employeeDto.setEnterpriseName(employee.getEnterprise().getName());
+        employeeDto.setRole(employee.getRole().getRole());
+        employeeDto.setPhone(employee.getProfile().getPhone());
+        employeeDto.setIdTransaction(idTransactions);
+        employeeDto.setCreated_at(employee.getCreated_at());
+        employeeDto.setUpdated_at(employee.getUpdated_at());
+
+        return employeeDto;
     }
 
     @Override
-    public Employee findById(Long id) throws Exception {
-
-        try {
-            Optional<Employee> entityOptional = employeeRepository.findById(id);
-            return entityOptional.get();
-
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+    public List<EmployeeDto> findAll() {
+        return employeeRepository.findAll()
+                .stream()
+                .map(this::convertEntityDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Employee create(Employee entity) throws Exception {
+    public EmployeeDto findById(Long idEmployee) {
 
-        try {
-            entity = employeeRepository.save(entity);
-            return entity;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        Optional<Employee> employee = employeeRepository.findById(idEmployee);
+        List<Long> idTransactions = new ArrayList<>();
+        employee.get().getTransaction().forEach((t) -> {
+            idTransactions.add(t.getIdTransaction());
+        });
+
+        EmployeeDto employeeDto = new EmployeeDto();
+
+        employeeDto.setIdEmployee(employee.get().getIdEmployee());
+        employeeDto.setEmployeeName(employee.get().getProfile().getName());
+        employeeDto.setEnterpriseName(employee.get().getEnterprise().getName());
+        employeeDto.setRole(employee.get().getRole().getRole());
+        employeeDto.setPhone(employee.get().getProfile().getPhone());
+        employeeDto.setIdTransaction(idTransactions);
+        employeeDto.setCreated_at(employee.get().getCreated_at());
+        employeeDto.setUpdated_at(employee.get().getUpdated_at());
+
+        return employeeDto;
+
     }
 
     @Override
-    public Employee update(Long id, Employee entity) throws Exception {
+    public Employee create(Employee entity) {
 
-        try {
-            Optional<Employee> employeeOptional = employeeRepository.findById(id);
-            Employee employeeUpdate = employeeOptional.get();
-            employeeUpdate = employeeRepository.save(entity);
-            return employeeUpdate;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        return employeeRepository.save(entity);
     }
+
     @Override
-    /*    @Transactional*/
-    public boolean delete(Long id) throws Exception {
+    public Employee update(Long id, Employee entity) {
 
-        try {
-            if (employeeRepository.existsById(id)) {
-                employeeRepository.deleteById(id);
-                return true;
-            } else {
-                throw new Exception();
-            }
 
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+        Optional<Employee> employeeUpdate = employeeRepository.findById(id);
+        Employee employee = employeeUpdate.get();
+
+
+        if(entity.getEmail() != null){
+            employee.setEmail(entity.getEmail());
         }
+        if(entity.getRole() != null){
+            employee.setRole(entity.getRole());
+        }
+        if(entity.getProfile() != null){
+            employee.setProfile(entity.getProfile());
+        }
+        if(entity.getEnterprise() != null){
+            employee.setEnterprise(entity.getEnterprise());
+        }
+        if(entity.getCreated_at() != null){
+            employee.setCreated_at(entity.getCreated_at());
+        }
+        if(entity.getUpdated_at() != null){
+            employee.setUpdated_at(entity.getUpdated_at());
+        }
+
+        return employeeRepository.save(employee);
     }
 
-    public EmployeeDto getEmployeeData(Long idEmployee)throws Exception {
+    @Override
+    public Employee updateOnce(Long id, Map<Object, Object> objectMap) {
 
-        try {
-            Optional<Employee> employee = employeeRepository.findById(idEmployee);
+        Employee employeeUpdate = employeeRepository.findById(id).get();
 
-            List<Long> idTransactions = new ArrayList<>();
+        objectMap.forEach((key, value) -> {
+            Field field = ReflectionUtils.findField(Employee.class, (String) key);
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, employeeUpdate, value);
+        });
 
-            employee.get().getTransaction().forEach((t)->{
-                idTransactions.add(t.getIdTransaction());
-            });
+        return employeeRepository.save(employeeUpdate);
 
-            EmployeeDto employeeDto = new EmployeeDto();
-
-            employeeDto.setIdEmployee(employee.get().getIdEmployee());
-            employeeDto.setEmployeeName(employee.get().getProfile().getName());
-            employeeDto.setEnterpriseName(employee.get().getEnterprise().getName());
-            employeeDto.setRole(employee.get().getRole().getRole());
-            employeeDto.setIdTransaccion(idTransactions);
-
-            return employeeDto;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
     }
+
+    @Override
+    public boolean delete(Long id) {
+        employeeRepository.deleteById(id);
+        return true;
+    }
+
+
 }

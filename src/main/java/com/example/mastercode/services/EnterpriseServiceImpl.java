@@ -1,12 +1,15 @@
 package com.example.mastercode.services;
 
+import com.example.mastercode.dto.EnterpriseDto;
 import com.example.mastercode.entities.Enterprise;
 import com.example.mastercode.repositories.EnterpriseRepository;
 import com.example.mastercode.services.Interface.EnterpriseService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EnterpriseServiceImpl implements EnterpriseService {
@@ -17,66 +20,110 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         this.enterpriseRepository = enterpriseRepository;
     }
 
-    @Override
-    public List<Enterprise> findAll() throws Exception {
-        try {
+    private EnterpriseDto convertEntityDto(Enterprise enterprise) {
 
-            List<Enterprise> entities = enterpriseRepository.findAll();
-            return entities;
+        Optional<Enterprise> enterprises = enterpriseRepository.findById(enterprise.getIdEnterprise());
+        List<Long> idTransactions = new ArrayList<>();
+        enterprises.get().getTransactionList().forEach((t) -> {
+            idTransactions.add(t.getIdTransaction());
+        });
 
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        List<String> employeeNames = new ArrayList<>();
+        enterprises.get().getEmployeesList().forEach((t) -> {
+            employeeNames.add(t.getProfile().getName());
+        });
+
+        EnterpriseDto enterpriseDto = new EnterpriseDto();
+
+        enterpriseDto.setIdEnterprise(enterprise.getIdEnterprise());
+        enterpriseDto.setName(enterprise.getName());
+        enterpriseDto.setNit(enterprise.getNit());
+        enterpriseDto.setPhone(enterprise.getPhone());
+        enterpriseDto.setTransactionList(idTransactions);
+        enterpriseDto.setEmployeesList(employeeNames);
+        enterpriseDto.setCreated_at(enterprise.getCreated_at());
+        enterpriseDto.setUpdated_at(enterprise.getUpdated_at());
+
+        return enterpriseDto;
     }
 
     @Override
-    public Enterprise findById(Long id) throws Exception {
-        try {
-            Optional<Enterprise> entityOptional = enterpriseRepository.findById(id);
-            return entityOptional.get();
-
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+    public List<EnterpriseDto> findAll() {
+        return enterpriseRepository.findAll()
+                .stream()
+                .map(this::convertEntityDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Enterprise create(Enterprise entity) throws Exception {
+    public EnterpriseDto findById(Long idEnterprise) {
 
-        try {
-            entity = enterpriseRepository.save(entity);
-            return entity;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        Optional<Enterprise> enterprises = enterpriseRepository.findById(idEnterprise);
+        List<Long> idTransactions = new ArrayList<>();
+        enterprises.get().getTransactionList().forEach((t) -> {
+            idTransactions.add(t.getIdTransaction());
+        });
+
+        List<String> employeeNames = new ArrayList<>();
+        enterprises.get().getEmployeesList().forEach((t) -> {
+            employeeNames.add(t.getProfile().getName());
+        });
+
+        EnterpriseDto enterpriseDto = new EnterpriseDto();
+
+        enterpriseDto.setIdEnterprise(enterprises.get().getIdEnterprise());
+        enterpriseDto.setName(enterprises.get().getName());
+        enterpriseDto.setNit(enterprises.get().getNit());
+        enterpriseDto.setPhone(enterprises.get().getPhone());
+        enterpriseDto.setTransactionList(idTransactions);
+        enterpriseDto.setEmployeesList(employeeNames);
+        enterpriseDto.setCreated_at(enterprises.get().getCreated_at());
+        enterpriseDto.setUpdated_at(enterprises.get().getUpdated_at());
+
+        return enterpriseDto;
     }
 
     @Override
-    public Enterprise update(Long id, Enterprise entity) throws Exception {
-        try {
-            Optional<Enterprise> enterpiseOptional = enterpriseRepository.findById(id);
-            Enterprise enterpriseUpdate = enterpiseOptional.get();
-            enterpriseUpdate = enterpriseRepository.save(entity);
-            return enterpriseUpdate;
+    public Enterprise create(Enterprise entity) {
 
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        return enterpriseRepository.save(entity);
     }
 
     @Override
-    public boolean delete(Long id) throws Exception {
+    public Enterprise update(Long id, Enterprise entity) {
 
-        try {
-            if (enterpriseRepository.existsById(id)) {
-                enterpriseRepository.deleteById(id);
-                return true;
-            } else {
-                throw new Exception();
-            }
+        Optional<Enterprise> enterpriseUpdate = enterpriseRepository.findById(id);
 
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+        Enterprise enterprise = enterpriseUpdate.get();
+
+        if (entity.getName() != null) {
+            enterprise.setName(entity.getName());
         }
+        if (entity.getNit() != null) {
+            enterprise.setNit(entity.getNit());
+        }
+        if (entity.getPhone() != null) {
+            enterprise.setPhone(entity.getPhone());
+        }
+        if (entity.getAddress() != null) {
+            enterprise.setAddress(entity.getAddress());
+        }
+        if (entity.getCreated_at() != null) {
+            enterprise.setCreated_at(entity.getCreated_at());
+        }
+        if (entity.getUpdated_at() != null) {
+            enterprise.setUpdated_at(entity.getUpdated_at());
+        }
+           Enterprise responde = enterpriseRepository.save(enterprise);
+
+        return responde;
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        enterpriseRepository.deleteById(id);
+        return true;
+
+
     }
 }

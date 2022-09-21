@@ -1,7 +1,5 @@
 package com.example.mastercode.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -9,6 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Enterprices")
+
 public class Enterprise implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY
@@ -23,20 +22,22 @@ public class Enterprise implements Serializable {
     private String phone;//enterprise phone
     @Column(name = "address")
     private String address;//enterprise address
-    @JsonManagedReference
-    @OneToMany(mappedBy = "enterprise",targetEntity = Employee.class,cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Employee> employeesList ;//enterprise employee
+//    @JsonManagedReference
+    @OneToMany(mappedBy = "enterprise")
+    private List<Transaction> transactionList;//enterprise employee
+//    @JsonManagedReference
+    @OneToMany(mappedBy = "enterprise")
+    private List<Employee> employeesList;//enterprise employee
     @Column(name = "created_at")
     private LocalDate created_at;  // transaction created date
     @Column(name = "updated_at")
     private LocalDate updated_at; // transacción updated date
 
-    public Enterprise(String name, String nit, String phone, String address,List<Employee> employees,  LocalDate created_at, LocalDate updated_at) {
+    public Enterprise(String name, String nit, String phone, String address, LocalDate created_at, LocalDate updated_at) {
         this.name = name;
         this.nit = nit;
         this.phone = phone;
         this.address = address;
-        this.employeesList = employees;
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
@@ -83,6 +84,15 @@ public class Enterprise implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+
+    public List<Transaction> getTransactionList() {
+        return transactionList;
+    }
+
+    public void setTransactionList(List<Transaction> transactionList) {
+        this.transactionList = transactionList;
     }
 
     public List<Employee> getEmployeesList() {

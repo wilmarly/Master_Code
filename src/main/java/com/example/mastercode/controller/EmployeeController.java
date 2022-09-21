@@ -6,6 +6,7 @@ import com.example.mastercode.services.EmployeeServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -21,32 +22,37 @@ public class EmployeeController {
     }
 
     @GetMapping()
-    public List<Employee> getEmployeeList() throws Exception {
+    public List<EmployeeDto> getEmployeeList(){
         return employeeServiceImpl.findAll();
     }
 
     @PostMapping()
-    public Employee createEmployee(@RequestBody Employee request) throws Exception {
+    public Employee createEmployee(@RequestBody Employee request){
         return employeeServiceImpl.create(request);
     }
 
     @GetMapping("/{id}")
-    public Optional<Employee> getEmployeeId(@PathVariable Long id) throws Exception {
+    public Optional<EmployeeDto> getEmployeeId(@PathVariable Long id)  {
         return Optional.ofNullable(employeeServiceImpl.findById(id));
     }
 
     @GetMapping("/dto/{id}")
-    public EmployeeDto getEmployeeDto(@PathVariable Long id) throws Exception {
-        return employeeServiceImpl.getEmployeeData(id);
+    public EmployeeDto getEmployeeDto(@PathVariable Long id) {
+        return employeeServiceImpl.findById(id);
     }
 
     @PatchMapping("/{id}")
-    public Employee modifyEmployee(@PathVariable Long id, @RequestBody Employee employee) throws Exception {
-        return employeeServiceImpl.update(id, employee);
+    public Employee modifyEmployee(@PathVariable Long id, @RequestBody Employee entity) {
+        return employeeServiceImpl.update(id, entity);
+    }
+
+    @PatchMapping("/camp/{id}")
+    public Employee modifyEmployee2(@PathVariable Long id, @RequestBody Map<Object, Object> objectMap) {
+        return employeeServiceImpl.updateOnce(id, objectMap);
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteEmployee(@PathVariable Long id) throws Exception {
+    public boolean deleteEmployee(@PathVariable Long id) {
         return employeeServiceImpl.delete(id);
     }
 /*

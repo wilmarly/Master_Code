@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -20,90 +21,73 @@ public class RoleServiceImpl implements RoleService {
         this.roleRepository = roleRepository;
     }
 
+    private RoleDto convertEntityDto(Roles role){
+        RoleDto roleDto = new RoleDto();
 
-    @Override
-/*    @Transactional*/
-    public List<Roles> findAll() throws Exception {
-        try {
+        roleDto.setIdRole(role.getIdRole());
+        roleDto.setRole(role.getRole());
 
-            List<Roles> entities = roleRepository.findAll();
-            return entities;
-
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        return roleDto;
     }
 
     @Override
-/*    @Transactional*/
-    public Roles findById(Long id) throws Exception {
-        try {
-            Optional<Roles> entityOptional = roleRepository.findById(id);
-            return entityOptional.get();
+    public List<RoleDto> findAll() {
 
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+
+        return roleRepository.findAll()
+                .stream()
+                .map(this::convertEntityDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-/*    @Transactional*/
-    public Roles create(Roles entity) throws Exception {
+    public RoleDto findById(Long idRole) {
 
-        try {
-            entity = roleRepository.save(entity);
-            return entity;
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        Optional<Roles> role = roleRepository.findById(idRole);
+        RoleDto roleDto = new RoleDto();
+        roleDto.setIdRole(role.get().getIdRole());
+        roleDto.setRole(role.get().getRole());
+
+        return roleDto;
     }
 
     @Override
-/*    @Transactional*/
-    public Roles update(Long id, Roles entity) throws Exception {
-        try {
-            Optional<Roles> roleOptional = roleRepository.findById(id);
-            Roles rolesUpdate = roleOptional.get();
-            rolesUpdate = roleRepository.save(entity);
-            return rolesUpdate;
+    public Roles create(Roles entity) {
 
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        entity = roleRepository.save(entity);
+        return entity;
     }
 
     @Override
-/*    @Transactional*/
-    public boolean delete(Long id) throws Exception {
-        try {
-            if (roleRepository.existsById(id)) {
-                roleRepository.deleteById(id);
-                return true;
-            } else {
-                throw new Exception();
-            }
+    public Roles update(Long id, Roles entity) {
 
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+        Optional<Roles> roleUpdate = roleRepository.findById(id);
+
+        Roles role = roleUpdate.get();
+
+        if(entity.getRole() != null){
+            role.setRole(entity.getRole());
         }
+
+        return roleRepository.save(role);
     }
 
     @Override
-    public RoleDto getRoleData(Long idRole) throws Exception {
+    public boolean delete(Long id) {
+        roleRepository.deleteById(id);
+        return true;
+    }
 
-        try {
-            Optional<Roles> role = roleRepository.findById(idRole);
+    @Override
+    public RoleDto getRoleData(Long idRole) {
 
-            RoleDto roleDto = new RoleDto();
+        Optional<Roles> role = roleRepository.findById(idRole);
 
-            roleDto.setIdRole(role.get().getIdRole());
-            roleDto.setRole(role.get().getRole());
+        RoleDto roleDto = new RoleDto();
 
+        roleDto.setIdRole(role.get().getIdRole());
+        roleDto.setRole(role.get().getRole());
 
-            return roleDto;
-        }catch (Exception e){
-            throw new Exception(e.getMessage());
-        }
-
+        return roleDto;
     }
 }

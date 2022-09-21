@@ -1,5 +1,6 @@
 package com.example.mastercode.controller;
 
+import com.example.mastercode.dto.EnterpriseDto;
 import com.example.mastercode.entities.Enterprise;
 import com.example.mastercode.services.EnterpriseServiceImpl;
 import org.springframework.web.bind.annotation.*;
@@ -17,28 +18,28 @@ public class EnterpriseController {
         this.enterpriseServiceImpl = enterpriseServiceImpl;
     }
 
-        @GetMapping()
-        public List<Enterprise> getEnterpriseList() throws Exception {
-            return enterpriseServiceImpl.findAll();
-        }
+    @GetMapping()
+    public List<EnterpriseDto> getEnterpriseList() {
+        return enterpriseServiceImpl.findAll();
+    }
 
-        @PostMapping()
-        public Enterprise createEnterprise(@RequestBody Enterprise request) throws Exception {
-            return enterpriseServiceImpl.create(request);
-        }
+    @PostMapping()
+    public Enterprise createEnterprise(@RequestBody Enterprise request) {
+        return enterpriseServiceImpl.create(request);
+    }
 
-        @GetMapping("/{id}")
-        public Optional<Enterprise> getEnterpriseId(@PathVariable Long id) throws Exception {
-            return Optional.ofNullable(enterpriseServiceImpl.findById(id));
-        }
+    @GetMapping("/{id}")
+    public Optional<EnterpriseDto> getEnterpriseId(@PathVariable Long id) {
+        return Optional.ofNullable(enterpriseServiceImpl.findById(id));
+    }
 
-        @PatchMapping("/{id}")
-        public Enterprise modifyEnterprise(@PathVariable Long id, @RequestBody Enterprise enterprise) throws Exception {
-            return enterpriseServiceImpl.update(id, enterprise);
-        }
+    @PatchMapping("/{id}")
+    public Enterprise modifyEnterprise(@PathVariable Long id, @RequestBody Enterprise enterprise) {
+        return enterpriseServiceImpl.update(id, enterprise);
+    }
 
-        @DeleteMapping("/{id}")
-        public boolean deleteEnterprise(@PathVariable Long id) throws Exception {
-            return enterpriseServiceImpl.delete(id);
-        }
+    @DeleteMapping("/{id}")
+    public boolean deleteEnterprise(@PathVariable Long id){
+        return enterpriseServiceImpl.delete(id);
+    }
 }

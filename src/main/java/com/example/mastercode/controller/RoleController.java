@@ -20,32 +20,32 @@ public class RoleController {
     }
 
     @GetMapping()
-    public List<Roles> getRoleList() throws Exception {
+    public List<RoleDto> getRoleList() {
         return roleServiceImpl.findAll();
     }
 
     @PostMapping()
-    public Roles createRole(@RequestBody Roles request) throws Exception {
+    public Roles createRole(@RequestBody Roles request) {
         return roleServiceImpl.create(request);
     }
 
     @GetMapping("/{id}")
-    public Optional<Roles> getRoleId(@PathVariable Long id) throws Exception {
+    public Optional<RoleDto> getRoleId(@PathVariable Long id) {
         return Optional.ofNullable(roleServiceImpl.findById(id));
     }
 
     @GetMapping("/dto/{id}")
-    public RoleDto getRoleDto(@PathVariable Long id) throws Exception {
+    public RoleDto getRoleDto(@PathVariable Long id) {
         return roleServiceImpl.getRoleData(id);
     }
 
     @PatchMapping("/{id}")
-    public Roles modifyRole(@PathVariable Long id, @RequestBody Roles roles) throws Exception {
+    public Roles modifyRole(@PathVariable Long id, @RequestBody Roles roles) {
         return roleServiceImpl.update(id, roles);
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteRole(@PathVariable Long id) throws Exception {
+    public boolean deleteRole(@PathVariable Long id) {
         return roleServiceImpl.delete(id);
     }
         /*

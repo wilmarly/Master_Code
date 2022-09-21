@@ -1,5 +1,6 @@
 package com.example.mastercode.controller;
 
+import com.example.mastercode.dto.TransactionDto;
 import com.example.mastercode.entities.Transaction;
 import com.example.mastercode.services.TransactionServiceImpl;
 import org.springframework.web.bind.annotation.*;
@@ -16,34 +17,36 @@ public class TransactionController {
     public TransactionController(TransactionServiceImpl transactionServiceImpl) {
         this.transactionServiceImpl = transactionServiceImpl;
     }
+
     @GetMapping()
-    public List<Transaction> getTransactionList() throws Exception {
+    public List<TransactionDto> getTransactionList() {
         return transactionServiceImpl.findAll();
     }
 
 
     @PostMapping()
-    public Transaction createTransaction(@RequestBody Transaction request) throws Exception {
+    public Transaction createTransaction(@RequestBody Transaction request)  {
+        System.out.println(request);
         return transactionServiceImpl.create(request);
     }
 
     @GetMapping("/{id}")
-    public Optional<Transaction> getTransactionId(@PathVariable Long id) throws Exception {
+    public Optional<TransactionDto> getTransactionId(@PathVariable Long id) {
         return Optional.ofNullable(transactionServiceImpl.findById(id));
     }
 
     @GetMapping("/transaction-by-employee/{idEmployee}")
-    public List<Transaction> getTransactionEmployee(@PathVariable Long idEmployee) throws Exception {
+    public List<Transaction> getTransactionEmployee(@PathVariable Long idEmployee) {
         return transactionServiceImpl.getTransactionEmployee(idEmployee);
     }
 
     @PatchMapping("/{id}")
-    public Transaction modifyTransaction(@PathVariable Long id, @RequestBody Transaction transaction) throws Exception {
+    public Transaction modifyTransaction(@PathVariable Long id, @RequestBody Transaction transaction) {
         return transactionServiceImpl.update(id, transaction);
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteTransaction(@PathVariable Long id) throws Exception {
+    public boolean deleteTransaction(@PathVariable Long id) {
         return transactionServiceImpl.delete(id);
     }
 }

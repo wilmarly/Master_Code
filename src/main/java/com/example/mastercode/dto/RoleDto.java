@@ -1,22 +1,11 @@
 package com.example.mastercode.dto;
 
-import java.util.List;
+import java.io.Serializable;
 
-public class RoleDto {
+public class RoleDto implements Serializable {
     private Long idRole;
     private String role;
 
-    private List<Long> idEmploy;
-
-    public RoleDto(Long idRole, String role, List<Long> idEmploy) {
-        this.idRole = idRole;
-        this.role = role;
-        this.idEmploy = idEmploy;
-    }
-
-    public RoleDto() {
-
-    }
 
     public Long getIdRole() {
         return idRole;
@@ -34,11 +23,4 @@ public class RoleDto {
         this.role = role;
     }
 
-    public List<Long> getIdEmploy() {
-        return idEmploy;
-    }
-
-    public void setIdEmploy(List<Long> idEmploy) {
-        this.idEmploy = idEmploy;
-    }
 }

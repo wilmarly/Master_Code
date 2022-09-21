@@ -1,25 +1,19 @@
 package com.example.mastercode.dto;
 
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
-public class EmployeeDto {
+public class EmployeeDto implements Serializable {
 
     private Long idEmployee;
     private String employeeName;
     private String enterpriseName;
     private String role;
-    private List<Long> idTransaccion;
-
-    public EmployeeDto() {
-    }
-
-    public EmployeeDto(Long idEmployee, String employeeName, String enterpriseName, String role, List<Long> idTransaccion) {
-        this.idEmployee = idEmployee;
-        this.employeeName = employeeName;
-        this.enterpriseName = enterpriseName;
-        this.role = role;
-        this.idTransaccion = idTransaccion;
-    }
+    private String phone;
+    private List<Long> idTransaction;
+    private LocalDate created_at;
+    private LocalDate updated_at;
 
     public Long getIdEmployee() {
         return idEmployee;
@@ -53,11 +47,35 @@ public class EmployeeDto {
         this.role = role;
     }
 
-    public List<Long> getIdTransaccion() {
-        return idTransaccion;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setIdTransaccion(List<Long> idTransaccion) {
-        this.idTransaccion = idTransaccion;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public List<Long> getIdTransaction() {
+        return idTransaction;
+    }
+
+    public void setIdTransaction(List<Long> idTransaction) {
+        this.idTransaction = idTransaction;
+    }
+
+    public LocalDate getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(LocalDate created_at) {
+        this.created_at = created_at;
+    }
+
+    public LocalDate getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(LocalDate updated_at) {
+        this.updated_at = updated_at;
     }
 }
