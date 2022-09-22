@@ -1,11 +1,14 @@
 package com.example.mastercode.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@JsonIgnoreProperties("transaction")
 @Table(name = "Employee")
 public class Employee implements Serializable {
     @Id
@@ -19,11 +22,9 @@ public class Employee implements Serializable {
     @OneToOne
     @JoinColumn(name = "id_profile")
     private Profile profile;//Employer profile
-//    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_enterprice")
     private Enterprise enterprise;//Employer enterprice
-    //    @JsonManagedReference
     @OneToMany(mappedBy = "employee")
     private List<Transaction> transaction;
     @Column(name = "created_at")
@@ -115,7 +116,7 @@ public class Employee implements Serializable {
                 ", email='" + email + '\'' +
                 ", roles=" + roles +
                 ", profile=" + profile +
-                ", enterprice=" + enterprise +
+                ", enterprise=" + enterprise +
                 ", transaction=" + transaction +
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +

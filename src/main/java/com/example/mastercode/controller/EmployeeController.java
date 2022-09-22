@@ -2,11 +2,10 @@ package com.example.mastercode.controller;
 
 import com.example.mastercode.dto.EmployeeDto;
 import com.example.mastercode.entities.Employee;
-import com.example.mastercode.services.EmployeeServiceImpl;
+import com.example.mastercode.services.Interface.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -15,45 +14,34 @@ import java.util.Optional;
 @RequestMapping("employee")
 public class EmployeeController {
 
-    private final EmployeeServiceImpl employeeServiceImpl;
+    private final EmployeeService instance;
 
-    public EmployeeController(EmployeeServiceImpl employeeServiceImpl) {
-        this.employeeServiceImpl = employeeServiceImpl;
+    public EmployeeController(EmployeeService instance) {
+        this.instance = instance;
     }
 
     @GetMapping()
     public List<EmployeeDto> getEmployeeList(){
-        return employeeServiceImpl.findAll();
+        return instance.findAll();
     }
 
     @PostMapping()
     public Employee createEmployee(@RequestBody Employee request){
-        return employeeServiceImpl.create(request);
+        return instance.create(request);
     }
 
     @GetMapping("/{id}")
     public Optional<EmployeeDto> getEmployeeId(@PathVariable Long id)  {
-        return Optional.ofNullable(employeeServiceImpl.findById(id));
+        return Optional.ofNullable(instance.findById(id));
     }
-
-    @GetMapping("/dto/{id}")
-    public EmployeeDto getEmployeeDto(@PathVariable Long id) {
-        return employeeServiceImpl.findById(id);
-    }
-
     @PatchMapping("/{id}")
     public Employee modifyEmployee(@PathVariable Long id, @RequestBody Employee entity) {
-        return employeeServiceImpl.update(id, entity);
-    }
-
-    @PatchMapping("/camp/{id}")
-    public Employee modifyEmployee2(@PathVariable Long id, @RequestBody Map<Object, Object> objectMap) {
-        return employeeServiceImpl.updateOnce(id, objectMap);
+        return instance.update(id, entity);
     }
 
     @DeleteMapping("/{id}")
     public boolean deleteEmployee(@PathVariable Long id) {
-        return employeeServiceImpl.delete(id);
+        return instance.delete(id);
     }
 /*
         @PostMapping : Crear un recurso nuevo

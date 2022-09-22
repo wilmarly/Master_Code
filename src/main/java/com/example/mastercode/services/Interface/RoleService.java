@@ -11,5 +11,4 @@ public interface RoleService {
     Roles create(Roles entity);
     Roles update(Long id, Roles entity);
     boolean delete (Long id);
-    RoleDto getRoleData(Long idRole);
 }

@@ -5,8 +5,7 @@ import java.time.LocalDate;
 public class ProfileDto {
 
     private Long idProfile;
-    private String name;
-    private String lastName;
+    private String fullName;
     private int age;
     private String phone;
     private LocalDate created_at;
@@ -15,25 +14,15 @@ public class ProfileDto {
     public Long getIdProfile() {
         return idProfile;
     }
-
     public void setIdProfile(Long idProfile) {
         this.idProfile = idProfile;
     }
-
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public int getAge() {

@@ -23,8 +23,7 @@ public class ProfileServicesImpl implements ProfileService {
         ProfileDto profileDto = new ProfileDto();
 
         profileDto.setIdProfile(profile.getIdProfile());
-        profileDto.setName(profile.getName().concat(profile.getLastName()));
-        profileDto.setLastName(profile.getLastName());
+        profileDto.setFullName(profile.getName().concat(" ").concat(profile.getLastName()));
         profileDto.setAge(profile.getAge());
         profileDto.setPhone(profile.getPhone());
         profileDto.setCreated_at(profile.getCreated_at());
@@ -44,26 +43,13 @@ public class ProfileServicesImpl implements ProfileService {
     @Override
     public ProfileDto findById(Long idProfile) {
 
-        Optional<Profile> profile = profileRepository.findById(idProfile);
-        ProfileDto profileDto = new ProfileDto();
-
-        profileDto.setIdProfile(profile.get().getIdProfile());
-        profileDto.setName(profile.get().getName().concat(profile.get().getLastName()));
-        profileDto.setLastName(profile.get().getLastName());
-        profileDto.setAge(profile.get().getAge());
-        profileDto.setPhone(profile.get().getPhone());
-        profileDto.setCreated_at(profile.get().getCreated_at());
-        profileDto.setUpdated_at(profile.get().getUpdated_at());
-
-
-        return profileDto;
+        return convertEntityDto(profileRepository.findById(idProfile).get());
     }
 
     @Override
     public Profile create(Profile entity) {
 
-        entity = profileRepository.save(entity);
-        return entity;
+        return profileRepository.save(entity);
     }
 
     @Override
@@ -98,11 +84,7 @@ public class ProfileServicesImpl implements ProfileService {
     @Override
     public boolean delete(Long id) {
 
-
         profileRepository.deleteById(id);
         return true;
-
-
     }
-
 }

@@ -26,7 +26,7 @@ public class TransactionServiceImpl implements TransactionService {
         transactionDto.setIdTransaction(transaction.getIdTransaction());
         transactionDto.setAmount(transaction.getAmount());
         transactionDto.setConcept(transaction.getConcept());
-        transactionDto.setEnterprise(transaction.getEnterprise().getName());
+        transactionDto.setEnterprise(transaction.getEmployee().getEnterprise().getName());
         transactionDto.setEmployee(transaction.getEmployee().getProfile().getName());
         transactionDto.setCreated_at(transaction.getCreated_at());
         transactionDto.setUpdated_at(transaction.getUpdated_at());
@@ -44,28 +44,14 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionDto findById(Long idTransaction) {
-        Optional<Transaction> transaction = transactionRepository.findById(idTransaction);
 
-        TransactionDto transactionDto = new TransactionDto();
-
-        transactionDto.setIdTransaction(transaction.get().getIdTransaction());
-        transactionDto.setAmount(transaction.get().getAmount());
-        transactionDto.setConcept(transaction.get().getConcept());
-        transactionDto.setEnterprise(transaction.get().getEnterprise().getName());
-        transactionDto.setEmployee(transaction.get().getEmployee().getProfile().getName());
-        transactionDto.setCreated_at(transaction.get().getCreated_at());
-        transactionDto.setUpdated_at(transaction.get().getUpdated_at());
-
-        return transactionDto;
+        return convertEntityDto(transactionRepository.findById(idTransaction).get());
     }
 
     @Override
     public Transaction create(Transaction entity) {
 
-        entity = transactionRepository.save(entity);
-        System.out.println(entity);
-        return entity;
-
+        return transactionRepository.save(entity);
     }
 
     @Override
@@ -80,9 +66,7 @@ public class TransactionServiceImpl implements TransactionService {
         if (entity.getConcept() != null){
             transaction.setConcept(entity.getConcept());
         }
-        if (entity.getEnterprise() != null){
-            transaction.setEnterprise(entity.getEnterprise());
-        }
+
         if (entity.getEmployee() != null){
             transaction.setEmployee(entity.getEmployee());
         }
@@ -106,7 +90,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     public List<Transaction> getTransactionEmployee(Long idEmployee) {
-        return transactionRepository.findByEmployeeIdEmployee(idEmployee);
+        return transactionRepository.findByTransactionIdEmployee(idEmployee);
     }
 }
 

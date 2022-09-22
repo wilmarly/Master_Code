@@ -1,13 +1,15 @@
 package com.example.mastercode.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@JsonIgnoreProperties({"transactionList","employeesList"})
 @Table(name = "Enterprices")
-
 public class Enterprise implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY
@@ -22,10 +24,6 @@ public class Enterprise implements Serializable {
     private String phone;//enterprise phone
     @Column(name = "address")
     private String address;//enterprise address
-//    @JsonManagedReference
-    @OneToMany(mappedBy = "enterprise")
-    private List<Transaction> transactionList;//enterprise employee
-//    @JsonManagedReference
     @OneToMany(mappedBy = "enterprise")
     private List<Employee> employeesList;//enterprise employee
     @Column(name = "created_at")
@@ -84,15 +82,6 @@ public class Enterprise implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-
-    public List<Transaction> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
     }
 
     public List<Employee> getEmployeesList() {

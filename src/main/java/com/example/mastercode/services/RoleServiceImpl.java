@@ -43,12 +43,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDto findById(Long idRole) {
 
-        Optional<Roles> role = roleRepository.findById(idRole);
-        RoleDto roleDto = new RoleDto();
-        roleDto.setIdRole(role.get().getIdRole());
-        roleDto.setRole(role.get().getRole());
-
-        return roleDto;
+        return convertEntityDto(roleRepository.findById(idRole).get());
     }
 
     @Override
@@ -78,16 +73,4 @@ public class RoleServiceImpl implements RoleService {
         return true;
     }
 
-    @Override
-    public RoleDto getRoleData(Long idRole) {
-
-        Optional<Roles> role = roleRepository.findById(idRole);
-
-        RoleDto roleDto = new RoleDto();
-
-        roleDto.setIdRole(role.get().getIdRole());
-        roleDto.setRole(role.get().getRole());
-
-        return roleDto;
-    }
 }

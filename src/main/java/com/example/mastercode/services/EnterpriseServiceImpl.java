@@ -1,6 +1,8 @@
 package com.example.mastercode.services;
 
 import com.example.mastercode.dto.EnterpriseDto;
+import com.example.mastercode.dto.TransactionByEnterpriseResponse;
+import com.example.mastercode.dto.TransactionShortDto;
 import com.example.mastercode.entities.Enterprise;
 import com.example.mastercode.repositories.EnterpriseRepository;
 import com.example.mastercode.services.Interface.EnterpriseService;
@@ -20,29 +22,33 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         this.enterpriseRepository = enterpriseRepository;
     }
 
-    private EnterpriseDto convertEntityDto(Enterprise enterprise) {
+    private EnterpriseDto convertEntityDto(Enterprise enterprises) {
 
-        Optional<Enterprise> enterprises = enterpriseRepository.findById(enterprise.getIdEnterprise());
+
         List<Long> idTransactions = new ArrayList<>();
-        enterprises.get().getTransactionList().forEach((t) -> {
-            idTransactions.add(t.getIdTransaction());
+
+        enterprises.getEmployeesList().forEach(employee -> {
+            employee.getTransaction().forEach(transaction -> {
+                idTransactions.add(transaction.getIdTransaction());
+            });
         });
 
         List<String> employeeNames = new ArrayList<>();
-        enterprises.get().getEmployeesList().forEach((t) -> {
+        enterprises.getEmployeesList().forEach((t) -> {
             employeeNames.add(t.getProfile().getName());
         });
 
         EnterpriseDto enterpriseDto = new EnterpriseDto();
 
-        enterpriseDto.setIdEnterprise(enterprise.getIdEnterprise());
-        enterpriseDto.setName(enterprise.getName());
-        enterpriseDto.setNit(enterprise.getNit());
-        enterpriseDto.setPhone(enterprise.getPhone());
+        enterpriseDto.setIdEnterprise(enterprises.getIdEnterprise());
+        enterpriseDto.setName(enterprises.getName());
+        enterpriseDto.setNit(enterprises.getNit());
+        enterpriseDto.setPhone(enterprises.getPhone());
+        enterpriseDto.setAddress(enterprises.getAddress());
         enterpriseDto.setTransactionList(idTransactions);
         enterpriseDto.setEmployeesList(employeeNames);
-        enterpriseDto.setCreated_at(enterprise.getCreated_at());
-        enterpriseDto.setUpdated_at(enterprise.getUpdated_at());
+        enterpriseDto.setCreated_at(enterprises.getCreated_at());
+        enterpriseDto.setUpdated_at(enterprises.getUpdated_at());
 
         return enterpriseDto;
     }
@@ -58,29 +64,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public EnterpriseDto findById(Long idEnterprise) {
 
-        Optional<Enterprise> enterprises = enterpriseRepository.findById(idEnterprise);
-        List<Long> idTransactions = new ArrayList<>();
-        enterprises.get().getTransactionList().forEach((t) -> {
-            idTransactions.add(t.getIdTransaction());
-        });
+        return convertEntityDto(enterpriseRepository.findById(idEnterprise).get());
 
-        List<String> employeeNames = new ArrayList<>();
-        enterprises.get().getEmployeesList().forEach((t) -> {
-            employeeNames.add(t.getProfile().getName());
-        });
-
-        EnterpriseDto enterpriseDto = new EnterpriseDto();
-
-        enterpriseDto.setIdEnterprise(enterprises.get().getIdEnterprise());
-        enterpriseDto.setName(enterprises.get().getName());
-        enterpriseDto.setNit(enterprises.get().getNit());
-        enterpriseDto.setPhone(enterprises.get().getPhone());
-        enterpriseDto.setTransactionList(idTransactions);
-        enterpriseDto.setEmployeesList(employeeNames);
-        enterpriseDto.setCreated_at(enterprises.get().getCreated_at());
-        enterpriseDto.setUpdated_at(enterprises.get().getUpdated_at());
-
-        return enterpriseDto;
     }
 
     @Override
@@ -114,7 +99,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         if (entity.getUpdated_at() != null) {
             enterprise.setUpdated_at(entity.getUpdated_at());
         }
-           Enterprise responde = enterpriseRepository.save(enterprise);
+        Enterprise responde = enterpriseRepository.save(enterprise);
 
         return responde;
     }
@@ -123,7 +108,33 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     public boolean delete(Long id) {
         enterpriseRepository.deleteById(id);
         return true;
+    }
 
+    @Override
+    public TransactionByEnterpriseResponse transactionByEnterprise(Long idEnterprises) {
 
+        Enterprise enterprise = enterpriseRepository.findById(idEnterprises).get();
+
+        List<TransactionShortDto> transactionShortDtoList = new ArrayList<>();
+
+        enterprise.getEmployeesList().forEach(employee -> {
+            employee.getTransaction().forEach(transaction -> {
+                TransactionShortDto transactionShortDto = new TransactionShortDto();
+                transactionShortDto.setIdTransaction(transaction.getIdTransaction());
+                transactionShortDto.setConcept(transaction.getConcept());
+                transactionShortDto.setAmount(transaction.getAmount());
+                transactionShortDto.setName(employee.getProfile().getName());
+
+                transactionShortDtoList.add(transactionShortDto);
+            });
+        });
+
+        TransactionByEnterpriseResponse transactionByEnterpriseResponse = new TransactionByEnterpriseResponse();
+
+        transactionByEnterpriseResponse.setIdEnterprise(enterprise.getIdEnterprise());
+        transactionByEnterpriseResponse.setNameEnterprise(enterprise.getName());
+        transactionByEnterpriseResponse.setTransactionList(transactionShortDtoList);
+
+        return transactionByEnterpriseResponse;
     }
 }
