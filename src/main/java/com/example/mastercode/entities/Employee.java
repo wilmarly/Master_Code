@@ -107,19 +107,19 @@ public class Employee implements Serializable {
     public void setUpdated_at(LocalDate updated_at) {
         this.updated_at = updated_at;
     }
-
+/*
     @Override
     public String toString() {
         return "Employee{" +
-                "idEmployee=" + idEmployee +
+                //"idEmployee=" + idEmployee +
                 ", email='" + email + '\'' +
                 ", roles=" + roles +
                 ", profile=" + profile +
-                ", enterprice=" + enterprise +
+                //", enterprise=" + enterprise +
                 ", transaction=" + transaction +
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 '}';
-    }
+    }*/
 }
         

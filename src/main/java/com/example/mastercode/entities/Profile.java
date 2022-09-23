@@ -92,7 +92,7 @@ public class Profile implements Serializable {
         this.updated_at = updated_at;
     }
 
-
+/*
     @Override
     public String toString() {
         return "Profile{" +
@@ -104,5 +104,5 @@ public class Profile implements Serializable {
                 ", created_at=" + created_at +
                 ", updated_at=" + updated_at +
                 '}';
-    }
+    }*/
 }

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+    <main>
+        <div class="px-4 py-5 my-5 text-center">
+            <img src="img/transaction.png">
+            <h1>Ingresa los datos de la transacción</h1>
+            <div>
+                <form th:action="@{/transaction}" th:method="post" th:object="${transaction}">
+                    <input th:field="*{amount}" type="text"  id="amount" placeholder="amount">
+                    <input th:field="*{concept}" type="text" id="concept" placeholder="concept">
+                    <input th:field="*{enterprise}" type="text" id="enterprise" placeholder="enterprise">
+                    <input th:field="*{employee}" type="text" id="employee" placeholder="employee">
+                    <input type="submit" value="Add">
+                </form>
+            </div>
+            <div class="col-lg-6 mx-auto">
+                <a type="button" Class="btn btn-primary btn-lg px-4" href="/">Atrás</a>
+            </div>
+        </div>
+    </main>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+</body>
+</html>

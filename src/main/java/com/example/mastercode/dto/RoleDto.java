@@ -6,7 +6,6 @@ public class RoleDto implements Serializable {
     private Long idRole;
     private String role;
 
-
     public Long getIdRole() {
         return idRole;
     }
