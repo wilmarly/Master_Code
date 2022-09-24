@@ -1,96 +1,81 @@
 package com.example.mastercode.services;
 
-import com.example.mastercode.dto.TransactionDto;
-import com.example.mastercode.entities.Transaction;
+import com.example.mastercode.dto.TransactionDTO;
+import com.example.mastercode.entities.Employee;
+import com.example.mastercode.repositories.EmployeeRepository;
 import com.example.mastercode.repositories.TransactionRepository;
-import com.example.mastercode.services.Interface.TransactionService;
+import com.example.mastercode.services.contracts.TransactionBusiness;
+import com.example.mastercode.services.mapper.EntityMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-public class TransactionServiceImpl implements TransactionService {
+public class TransactionServiceImpl implements TransactionBusiness {
 
     private final TransactionRepository transactionRepository;
+    private final EntityMapper mapper;
+    private final EmployeeRepository employeeRepository;
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository) {
+    public TransactionServiceImpl(TransactionRepository transactionRepository, EmployeeRepository employeeRepository) {
         this.transactionRepository = transactionRepository;
+        this.mapper = new EntityMapper();
+        this.employeeRepository = employeeRepository;
     }
 
-    private TransactionDto convertEntityDto(Transaction transaction) {
 
-        TransactionDto transactionDto = new TransactionDto();
-
-        transactionDto.setIdTransaction(transaction.getIdTransaction());
-        transactionDto.setAmount(transaction.getAmount());
-        transactionDto.setConcept(transaction.getConcept());
-        transactionDto.setEnterprise(transaction.getEmployee().getEnterprise().getName());
-        transactionDto.setEmployee(transaction.getEmployee().getProfile().getName());
-        transactionDto.setCreated_at(transaction.getCreated_at());
-        transactionDto.setUpdated_at(transaction.getUpdated_at());
-
-        return transactionDto;
-    }
     @Override
-    public List<TransactionDto> findAll() {
-
-        return  transactionRepository.findAll()
-                .stream()
-                .map(this::convertEntityDto)
-                .collect(Collectors.toList());
+    public List<TransactionDTO> findAll() {
+        return transactionRepository.findAll()
+                                    .stream()
+                                    .map(mapper::transactionDTO)
+                                    .toList();
     }
 
     @Override
-    public TransactionDto findById(Long idTransaction) {
-
-        return convertEntityDto(transactionRepository.findById(idTransaction).get());
+    public TransactionDTO findById(Long id) {
+        return transactionRepository.findById(id)
+                                    .map(mapper::transactionDTO)
+                                    .orElseThrow();
     }
 
     @Override
-    public Transaction create(Transaction entity) {
-
-        return transactionRepository.save(entity);
-    }
-
-    @Override
-    public Transaction update(Long id, Transaction entity) {
-
-        Optional<Transaction> transactionUpdate = transactionRepository.findById(id);
-        Transaction transaction = transactionUpdate.get();
-
-        if (entity.getAmount() != 0.0){
-            transaction.setAmount(entity.getAmount());
-        }
-        if (entity.getConcept() != null){
-            transaction.setConcept(entity.getConcept());
-        }
-
-        if (entity.getEmployee() != null){
-            transaction.setEmployee(entity.getEmployee());
-        }
-        if (entity.getCreated_at() != null){
-            transaction.setCreated_at(entity.getCreated_at());
-        }
-        if (entity.getUpdated_at() != null){
-            transaction.setUpdated_at(entity.getUpdated_at());
-        }
-
-        return transactionRepository.save(entity);
+    public <S extends TransactionDTO> TransactionDTO create(final S entity) {
+        var newTransaction = mapper.newTransaction(entity);
+        Optional<Employee> employeeFromDB = employeeRepository.findByProfileName(entity.employee());
+        return employeeFromDB.map(employee -> {
+                                 newTransaction.setEmployee(employee);
+                                 return transactionRepository.save(newTransaction);
+                             })
+                             .map(mapper::transactionDTO)
+                             .orElseThrow();
 
     }
 
     @Override
-    public boolean delete(Long id) {
+    public <S extends TransactionDTO> TransactionDTO update(final Long id, final S entity) {
+        return transactionRepository.findById(id)
+                                    .map(transaction -> {
+                                        transaction.setId(entity.id());
+                                        transaction.setAmount(entity.amount());
+                                        transaction.setConcept(entity.concept());
+                                        return transactionRepository.save(transaction);
+                                    })
+                                    .map(mapper::transactionDTO)
+                                    .orElseThrow();
+    }
 
+
+    @Override
+    public boolean delete(final Long id) {
         transactionRepository.deleteById(id);
-        return true;
-
+        return transactionRepository.existsById(id);
     }
 
-    public List<Transaction> getTransactionEmployee(Long idEmployee) {
-        return transactionRepository.findByTransactionIdEmployee(idEmployee);
+    @Override
+    public List<TransactionDTO> findAllByEnterprise(final String nit) {
+        return transactionRepository.allTransactionsByEnterprise(nit).stream().map(mapper::transactionDTO).toList();
     }
 }
 

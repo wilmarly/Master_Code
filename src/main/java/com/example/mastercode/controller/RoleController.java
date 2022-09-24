@@ -1,53 +1,45 @@
 package com.example.mastercode.controller;
 
-import com.example.mastercode.dto.RoleDto;
-import com.example.mastercode.entities.Roles;
-import com.example.mastercode.services.Interface.RoleService;
-import org.springframework.web.bind.annotation.*;
+import com.example.mastercode.dto.RoleDTO;
+import com.example.mastercode.services.contracts.BaseService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("role")
-public class RoleController {
-    private final RoleService instance;
+@RequestMapping("/role")
+public class RoleController implements BaseController<RoleDTO> {
+    private final BaseService<RoleDTO> service;
 
-    public RoleController(RoleService instance) {
-        this.instance = instance;
+    public RoleController(final BaseService<RoleDTO> service) {
+        this.service = service;
     }
 
-    @GetMapping()
-    public List<RoleDto> getRoleList() {
-        return instance.findAll();
+    @Override
+    public ResponseEntity<List<RoleDTO>> findAll() {
+        return ResponseEntity.ok(service.findAll());
     }
 
-    @PostMapping()
-    public Roles createRole(@RequestBody Roles request) {
-        return instance.create(request);
+    @Override
+    public ResponseEntity<RoleDTO> findById(final Long id) {
+        return ResponseEntity.ok(service.findById(id));
     }
 
-    @GetMapping("/{id}")
-    public Optional<RoleDto> getRoleId(@PathVariable Long id) {
-        return Optional.ofNullable(instance.findById(id));
+    @Override
+    public ResponseEntity<RoleDTO> create(final RoleDTO entity) {
+        return ResponseEntity.ok(service.create(entity));
     }
 
-    @PatchMapping("/{id}")
-    public Roles modifyRole(@PathVariable Long id, @RequestBody Roles roles) {
-        return instance.update(id, roles);
+    @Override
+    public ResponseEntity<RoleDTO> update(final Long id, final RoleDTO entity) {
+        return ResponseEntity.ok(service.update(id, entity));
     }
 
-    @DeleteMapping("/{id}")
-    public boolean deleteRole(@PathVariable Long id) {
-        return instance.delete(id);
+    @Override
+    public ResponseEntity<Boolean> delete(final Long id) {
+        return ResponseEntity.ok(service.delete(id));
     }
-        /*
-        @PostMapping
-        @GetMapping
-        @PatchMapping
-        @DeleteMapping
-        @PutMapping
-        */
 }
 

@@ -1,52 +1,52 @@
 package com.example.mastercode.controller;
 
-import com.example.mastercode.dto.TransactionDto;
-import com.example.mastercode.entities.Transaction;
-import com.example.mastercode.services.Interface.TransactionService;
-import org.springframework.web.bind.annotation.*;
+import com.example.mastercode.dto.TransactionDTO;
+import com.example.mastercode.services.contracts.TransactionBusiness;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("transaction")
-public class TransactionController {
-    private final TransactionService instance;
 
-    public TransactionController(TransactionService instance) {
-        this.instance = instance;
+@RequestMapping("/transaction")
+public class TransactionController implements BaseController<TransactionDTO> {
+    private final TransactionBusiness service;
+
+    public TransactionController(final TransactionBusiness service) {
+        this.service = service;
     }
 
-    @GetMapping()
-    public List<TransactionDto> getTransactionList() {
-        return instance.findAll();
+    @Override
+    public ResponseEntity<List<TransactionDTO>> findAll() {
+        return ResponseEntity.ok(service.findAll());
     }
 
-
-    @PostMapping()
-    public Transaction createTransaction(@RequestBody Transaction request)  {
-        System.out.println(request);
-        return instance.create(request);
+    @Override
+    public ResponseEntity<TransactionDTO> findById(final Long id) {
+        return ResponseEntity.ok(service.findById(id));
     }
 
-    @GetMapping("/{id}")
-    public Optional<TransactionDto> getTransactionId(@PathVariable Long id) {
-        return Optional.ofNullable(instance.findById(id));
+    @Override
+    public ResponseEntity<TransactionDTO> create(final TransactionDTO entity) {
+        return ResponseEntity.ok(service.create(entity));
     }
 
-    @GetMapping("/transaction-by-employee/{idEmployee}")
-    public List<Transaction> getTransactionEmployee(@PathVariable Long idEmployee) {
-        return instance.getTransactionEmployee(idEmployee);
+    @Override
+    public ResponseEntity<TransactionDTO> update(final Long id, final TransactionDTO entity) {
+        return ResponseEntity.ok(service.update(id, entity));
     }
 
-    @PatchMapping("/{id}")
-    public Transaction modifyTransaction(@PathVariable Long id, @RequestBody Transaction transaction) {
-        return instance.update(id, transaction);
+    @Override
+    public ResponseEntity<Boolean> delete(final Long id) {
+        return ResponseEntity.ok(service.delete(id));
     }
 
-    @DeleteMapping("/{id}")
-    public boolean deleteTransaction(@PathVariable Long id) {
-        return instance.delete(id);
+    @GetMapping(path = "/enterprise/{nit}")
+    public ResponseEntity<List<TransactionDTO>> allTransactionsByEnterprise(@PathVariable String nit) {
+        return ResponseEntity.ok(service.findAllByEnterprise(nit));
     }
 }

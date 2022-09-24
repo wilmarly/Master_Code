@@ -1,52 +1,82 @@
 package com.example.mastercode.entities;
 
-import javax.persistence.*;
+import com.example.mastercode.entities.common.AuditableEntity;
+import com.example.mastercode.entities.common.IdentificableEntity;
+import com.example.mastercode.entities.embedded.Auditable;
+
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.math.BigDecimal;
 
 @Entity
-@Table(name = "Transactions")
-public class Transaction implements Serializable {
+@Table(name = "transactions", schema = "crudexample")
+public class Transaction implements Serializable, IdentificableEntity, AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idTransaction; // transaction id
+    private Long id; // transaction id
     @Column(name = "amount")
-    private double amount; // transaction amount
+    private BigDecimal amount; // transaction amount
     @Column(name = "concept")
     private String concept;// transaction concept
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_employee")
     private Employee employee;
-    @Column(name = "created_at")
-    private LocalDate created_at;  // transaction created date
-    @Column(name = "updated_at")
-    private LocalDate updated_at;  // transaction updated date
+    @Embedded
+    private Auditable auditable;
 
-    //Constructor
-    public Transaction(double amount, String concept,  Employee employee, LocalDate created_at, LocalDate updated_at) {
-        this.amount = amount;
-        this.concept = concept;
-        this.employee = employee;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
+    public Transaction() {
+        //default contructor
     }
 
-    public Transaction() {//Void contructor
+    public Auditable getAuditable() {
+        return auditable;
     }
 
-    public Long getIdTransaction() {
-        return idTransaction;
+    public void setAuditable(final Auditable auditable) {
+        this.auditable = auditable;
     }
 
-    public void setIdTransaction(Long idTransaction) {
-        this.idTransaction = idTransaction;
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Transaction that = (Transaction) o;
+        return id != null && id.equals(that.id);
     }
 
-    public double getAmount() {
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long idTransaction) {
+        this.id = idTransaction;
+    }
+
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(final BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -66,31 +96,4 @@ public class Transaction implements Serializable {
         this.employee = employee;
     }
 
-    public LocalDate getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(LocalDate created_at) {
-        this.created_at = created_at;
-    }
-
-    public LocalDate getUpdated_at() {
-        return updated_at;
-    }
-
-    public void setUpdated_at(LocalDate updated_at) {
-        this.updated_at = updated_at;
-    }
-
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "id=" + idTransaction +
-                ", amount=" + amount +
-                ", concept='" + concept + '\'' +
-                ", employer=" + employee +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
-                '}';
-    }
 }

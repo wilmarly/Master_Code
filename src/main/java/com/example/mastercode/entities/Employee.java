@@ -1,56 +1,97 @@
 package com.example.mastercode.entities;
 
+import com.example.mastercode.entities.common.AuditableEntity;
+import com.example.mastercode.entities.common.IdentificableEntity;
+import com.example.mastercode.entities.embedded.Auditable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @JsonIgnoreProperties("transaction")
-@Table(name = "Employee")
-public class Employee implements Serializable {
+@Table(name = "employees", schema = "crudexample")
+public class Employee implements Serializable, IdentificableEntity, AuditableEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idEmployee;//Employer id
-    @Column(name = "email")
-    private String email;//Employer email
-    @OneToOne
-    @JoinColumn(name = "id_role")
-    private Roles roles;//Employer roles
-    @OneToOne
-    @JoinColumn(name = "id_profile")
-    private Profile profile;//Employer profile
-    @ManyToOne
-    @JoinColumn(name = "id_enterprice")
-    private Enterprise enterprise;//Employer enterprice
-    @OneToMany(mappedBy = "employee")
-    private List<Transaction> transaction;
-    @Column(name = "created_at")
-    private LocalDate created_at;//Employer created date
-    @Column(name = "updated_at")
-    private LocalDate updated_at;//Employer updated date
+    @Column(name = "id")
+    private Long id;//Employer id
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "employee_role", schema = "crudexample",
+            joinColumns = {@JoinColumn(name = "employee_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private Set<Role> roles = new LinkedHashSet<>();
 
-    public Employee(String email, Roles roles, Profile profile, Enterprise enterprise, LocalDate created_at, LocalDate updated_at) {// se puede retirar el argumento de id; List<Transaction> transaction,
-        this.email = email;
-        this.roles = roles;
-        this.profile = profile;
-        this.enterprise = enterprise;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
-    }
+    @Column(name = "email")
+    private String email;
+
+    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Profile profile;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_enterprise", foreignKey = @ForeignKey(name = "enterprise_fk"))
+    private Enterprise enterprise;
+
+    @Embedded
+    private Auditable auditable;
 
     public Employee() {
-
+        //default
     }
 
-    public Long getIdEmployee() {
-        return idEmployee;
+    @Override
+    public Auditable getAuditable() {
+        return auditable;
     }
 
-    public void setIdEmployee(Long idEmployee) {
-        this.idEmployee = idEmployee;
+    @Override
+    public void setAuditable(final Auditable auditable) {
+        this.auditable = auditable;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(final Profile profile) {
+        if (profile == null) {
+            if (this.profile != null) {
+                this.profile.setEmployee(null);
+            }
+        } else {
+            profile.setEmployee(this);
+        }
+        this.profile = profile;
+    }
+
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long idEmployee) {
+        this.id = idEmployee;
     }
 
     public String getEmail() {
@@ -61,20 +102,12 @@ public class Employee implements Serializable {
         this.email = email;
     }
 
-    public Roles getRole() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRole(Roles roles) {
+    public void setRoles(final Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public Profile getProfile() {
-        return profile;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
     }
 
     public Enterprise getEnterprise() {
@@ -85,42 +118,4 @@ public class Employee implements Serializable {
         this.enterprise = enterprise;
     }
 
-    public List<Transaction> getTransaction() {
-        return transaction;
-    }
-
-    public void setTransaction(List<Transaction> transaction) {
-        this.transaction = transaction;
-    }
-
-    public LocalDate getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(LocalDate created_at) {
-        this.created_at = created_at;
-    }
-
-    public LocalDate getUpdated_at() {
-        return updated_at;
-    }
-
-    public void setUpdated_at(LocalDate updated_at) {
-        this.updated_at = updated_at;
-    }
-
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "idEmployee=" + idEmployee +
-                ", email='" + email + '\'' +
-                ", roles=" + roles +
-                ", profile=" + profile +
-                ", enterprise=" + enterprise +
-                ", transaction=" + transaction +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
-                '}';
-    }
 }
-        

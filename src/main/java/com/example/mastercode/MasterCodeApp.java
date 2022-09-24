@@ -4,10 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Master_Code_App {
+public class MasterCodeApp {
 
-	public static void main(String[] args) {
-		SpringApplication.run(Master_Code_App.class, args);
-
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MasterCodeApp.class, args);
+    }
 }

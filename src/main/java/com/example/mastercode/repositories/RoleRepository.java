@@ -1,9 +1,12 @@
 package com.example.mastercode.repositories;
 
-import com.example.mastercode.entities.Roles;
+import com.example.mastercode.entities.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface RoleRepository extends JpaRepository<Roles, Long> {
+import java.util.Set;
+
+public interface RoleRepository extends JpaRepository<Role, Long> {
+
+
+    Set<Role> findAllByNameIn(Set<String> names);
 }

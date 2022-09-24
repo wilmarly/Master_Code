@@ -1,100 +1,82 @@
 package com.example.mastercode.services;
 
-import com.example.mastercode.dto.EmployeeDto;
-import com.example.mastercode.entities.Employee;
+import com.example.mastercode.dto.EmployeeDTO;
 import com.example.mastercode.repositories.EmployeeRepository;
-import com.example.mastercode.services.Interface.EmployeeService;
+import com.example.mastercode.repositories.EnterpriseRepository;
+import com.example.mastercode.repositories.RoleRepository;
+import com.example.mastercode.services.contracts.BaseService;
+import com.example.mastercode.services.mapper.EntityMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService {
+public class EmployeeServiceImpl implements BaseService<EmployeeDTO> {
 
     private final EmployeeRepository employeeRepository;
+    private final RoleRepository roleRepository;
+    private final EntityMapper mapper;
+    private final EnterpriseRepository enterpriseRepository;
 
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+    public EmployeeServiceImpl(final EmployeeRepository employeeRepository,
+                               RoleRepository roleRepository,
+                               EnterpriseRepository enterpriseRepository) {
         this.employeeRepository = employeeRepository;
-    }
-
-
-    private EmployeeDto convertEntityDto(Employee employee) {
-
-        Optional<Employee> employees = employeeRepository.findById(employee.getIdEmployee());
-        List<Long> idTransactions = new ArrayList<>();
-        employees.get().getTransaction().forEach((t) -> {
-            idTransactions.add(t.getIdTransaction());
-        });
-
-        EmployeeDto employeeDto = new EmployeeDto();
-
-        employeeDto.setIdEmployee(employee.getIdEmployee());
-        employeeDto.setEmployeeName(employee.getProfile().getName());
-        employeeDto.setEnterpriseName(employee.getEnterprise().getName());
-        employeeDto.setRole(employee.getRole().getRole());
-        employeeDto.setPhone(employee.getProfile().getPhone());
-        employeeDto.setIdTransaction(idTransactions);
-        employeeDto.setCreated_at(employee.getCreated_at());
-        employeeDto.setUpdated_at(employee.getUpdated_at());
-
-        return employeeDto;
+        this.roleRepository = roleRepository;
+        this.enterpriseRepository = enterpriseRepository;
+        this.mapper = new EntityMapper();
     }
 
     @Override
-    public List<EmployeeDto> findAll() {
+    public List<EmployeeDTO> findAll() {
         return employeeRepository.findAll()
-                .stream()
-                .map(this::convertEntityDto)
-                .collect(Collectors.toList());
+                                 .stream()
+                                 .map(mapper::employeeDTO)
+                                 .toList();
     }
 
     @Override
-    public EmployeeDto findById(Long idEmployee) {
-
-        return convertEntityDto(employeeRepository.findById(idEmployee).get());
+    public EmployeeDTO findById(final Long id) {
+        return employeeRepository.findById(id)
+                                 .map(mapper::employeeDTO)
+                                 .orElseThrow();
     }
 
     @Override
-    public Employee create(Employee entity) {
-
-        return employeeRepository.save(entity);
+    public <S extends EmployeeDTO> EmployeeDTO create(final S entity) {
+        var employee = mapper.newEmployee(entity);
+        var roles = roleRepository.findAllByNameIn(entity.getRoles());
+        employee.setRoles(roles);
+        var enterprise = enterpriseRepository.findByNit(entity.getEnterpriseNit())
+                                             .orElseThrow(() -> new NoSuchElementException("Enterprise not found"));
+        employee.setEnterprise(enterprise);
+        var savedEmployee = employeeRepository.save(employee);
+        return mapper.employeeDTO(savedEmployee);
     }
 
     @Override
-    public Employee update(Long id, Employee entity) {
+    public <S extends EmployeeDTO> EmployeeDTO update(final Long id, final S entity) {
+        return employeeRepository.findById(id)
+                                 .map(employee -> {
+                                     var profile = employee.getProfile();
+                                     profile.setName(entity.getName());
+                                     profile.setLastName(entity.getLastName());
+                                     profile.setAge(entity.getAge());
+                                     profile.setPhone(entity.getPhone());
 
-        Optional<Employee> employeeUpdate = employeeRepository.findById(id);
-        Employee employee = employeeUpdate.get();
-
-
-        if(entity.getEmail() != null){
-            employee.setEmail(entity.getEmail());
-        }
-        if(entity.getRole() != null){
-            employee.setRole(entity.getRole());
-        }
-        if(entity.getProfile() != null){
-            employee.setProfile(entity.getProfile());
-        }
-        if(entity.getEnterprise() != null){
-            employee.setEnterprise(entity.getEnterprise());
-        }
-        if(entity.getCreated_at() != null){
-            employee.setCreated_at(entity.getCreated_at());
-        }
-        if(entity.getUpdated_at() != null){
-            employee.setUpdated_at(entity.getUpdated_at());
-        }
-
-        return employeeRepository.save(employee);
+                                     employee.setId(entity.getId());
+                                     employee.setEmail(entity.getEmail());
+                                     employee.setProfile(profile);
+                                     return employeeRepository.save(employee);
+                                 })
+                                 .map(mapper::employeeDTO)
+                                 .orElseThrow();
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(final Long id) {
         employeeRepository.deleteById(id);
-        return true;
+        return employeeRepository.existsById(id);
     }
 }

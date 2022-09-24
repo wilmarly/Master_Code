@@ -1,53 +1,46 @@
 package com.example.mastercode.controller;
 
-import com.example.mastercode.dto.EmployeeDto;
-import com.example.mastercode.entities.Employee;
-import com.example.mastercode.services.Interface.EmployeeService;
-import org.springframework.web.bind.annotation.*;
+import com.example.mastercode.dto.EmployeeDTO;
+import com.example.mastercode.services.contracts.BaseService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("employee")
-public class EmployeeController {
+public class EmployeeController implements BaseController<EmployeeDTO> {
 
-    private final EmployeeService instance;
+    private final BaseService<EmployeeDTO> service;
 
-    public EmployeeController(EmployeeService instance) {
-        this.instance = instance;
+    public EmployeeController(final BaseService<EmployeeDTO> service) {
+        this.service = service;
     }
 
-    @GetMapping()
-    public List<EmployeeDto> getEmployeeList(){
-        return instance.findAll();
+    @Override
+    public ResponseEntity<List<EmployeeDTO>> findAll() {
+        return ResponseEntity.ok(service.findAll());
     }
 
-    @PostMapping()
-    public Employee createEmployee(@RequestBody Employee request){
-        return instance.create(request);
+    @Override
+    public ResponseEntity<EmployeeDTO> findById(final Long id) {
+        return ResponseEntity.ok(service.findById(id));
     }
 
-    @GetMapping("/{id}")
-    public Optional<EmployeeDto> getEmployeeId(@PathVariable Long id)  {
-        return Optional.ofNullable(instance.findById(id));
-    }
-    @PatchMapping("/{id}")
-    public Employee modifyEmployee(@PathVariable Long id, @RequestBody Employee entity) {
-        return instance.update(id, entity);
+    @Override
+    public ResponseEntity<EmployeeDTO> create(final EmployeeDTO entity) {
+        return ResponseEntity.ok(service.create(entity));
     }
 
-    @DeleteMapping("/{id}")
-    public boolean deleteEmployee(@PathVariable Long id) {
-        return instance.delete(id);
+    @Override
+    public ResponseEntity<EmployeeDTO> update(final Long id, final EmployeeDTO entity) {
+        return ResponseEntity.ok(service.update(id, entity));
     }
-/*
-        @PostMapping : Crear un recurso nuevo
-        @GetMapping : Consultar informacion de un recurso
-        @PatchMapping : Modificar solamente un atributo
-        @DeleteMapping : Eliminar un recurso determinado
-        @PutMapping : modificar un recurso existente
-*/
+
+    @Override
+    public ResponseEntity<Boolean> delete(final Long id) {
+        return ResponseEntity.ok(service.delete(id));
+    }
 }

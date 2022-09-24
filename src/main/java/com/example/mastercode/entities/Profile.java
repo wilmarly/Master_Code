@@ -1,15 +1,25 @@
 package com.example.mastercode.entities;
 
-import javax.persistence.*;
+import com.example.mastercode.entities.common.AuditableEntity;
+import com.example.mastercode.entities.common.IdentificableEntity;
+import com.example.mastercode.entities.embedded.Auditable;
+
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Entity
-@Table(name = "Profiles")
-public class Profile implements Serializable {
+@Table(name = "profiles", schema = "crudexample")
+public class Profile implements Serializable, IdentificableEntity, AuditableEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idProfile;//profile id
+    private Long id;//profile id
     @Column(name = "name")
     private String name;//profile name
     @Column(name = "last_name")
@@ -18,30 +28,46 @@ public class Profile implements Serializable {
     private Integer age;//profile age
     @Column(name = "phone")
     private String phone;//profile phone
-    @Column(name = "created_at")
-    private LocalDate created_at;//profile created date
-    @Column(name = "updated_at")
-    private LocalDate updated_at;//profile updated date
 
-    public Profile(String name, String lastName, Integer age, String phone, LocalDate created_at, LocalDate updated_at) {
-        this.name = name;
-        this.lastName = lastName;
-        this.age = age;
-        this.phone = phone;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
-    }
+    @Embedded
+    private Auditable auditable;
+
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
     public Profile() {
-
+        //default
     }
 
-    public Long getIdProfile() {
-        return idProfile;
+    @Override
+    public Auditable getAuditable() {
+        return auditable;
     }
 
-    public void setIdProfile(Long id) {
-        this.idProfile = id;
+    @Override
+    public void setAuditable(final Auditable auditable) {
+        this.auditable = auditable;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -76,33 +102,5 @@ public class Profile implements Serializable {
         this.phone = phone;
     }
 
-    public LocalDate getCreated_at() {
-        return created_at;
-    }
 
-    public void setCreated_at(LocalDate created_at) {
-        this.created_at = created_at;
-    }
-
-    public LocalDate getUpdated_at() {
-        return updated_at;
-    }
-
-    public void setUpdated_at(LocalDate updated_at) {
-        this.updated_at = updated_at;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Profile{" +
-                "id=" + idProfile +
-                ", name='" + name + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", age=" + age +
-                ", phone='" + phone + '\'' +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
-                '}';
-    }
 }

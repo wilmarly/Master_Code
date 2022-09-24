@@ -1,76 +1,61 @@
 package com.example.mastercode.services;
 
-import com.example.mastercode.dto.RoleDto;
-import com.example.mastercode.entities.Roles;
+import com.example.mastercode.dto.RoleDTO;
 import com.example.mastercode.repositories.RoleRepository;
-import com.example.mastercode.services.Interface.RoleService;
+import com.example.mastercode.services.contracts.BaseService;
+import com.example.mastercode.services.mapper.EntityMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceImpl implements BaseService<RoleDTO> {
 
     //create role class object
 
     private final RoleRepository roleRepository;
+    private final EntityMapper mapper;
 
     public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
+        this.mapper = new EntityMapper();
     }
 
-    private RoleDto convertEntityDto(Roles role){
-        RoleDto roleDto = new RoleDto();
 
-        roleDto.setIdRole(role.getIdRole());
-        roleDto.setRole(role.getRole());
-
-        return roleDto;
+    @Override
+    public List<RoleDTO> findAll() {
+        return roleRepository.findAll().stream().map(mapper::roleDTO).toList();
     }
 
     @Override
-    public List<RoleDto> findAll() {
-
-
-        return roleRepository.findAll()
-                .stream()
-                .map(this::convertEntityDto)
-                .collect(Collectors.toList());
+    public RoleDTO findById(final Long id) {
+        return roleRepository.findById(id)
+                             .map(mapper::roleDTO)
+                             .orElseThrow();
     }
 
     @Override
-    public RoleDto findById(Long idRole) {
-
-        return convertEntityDto(roleRepository.findById(idRole).get());
+    public <S extends RoleDTO> RoleDTO create(final S entity) {
+        var newRole = mapper.newRole(entity);
+        var savedNewRole = roleRepository.save(newRole);
+        return mapper.roleDTO(savedNewRole);
     }
 
     @Override
-    public Roles create(Roles entity) {
-
-        entity = roleRepository.save(entity);
-        return entity;
+    public <S extends RoleDTO> RoleDTO update(final Long id, final S entity) {
+        return roleRepository.findById(id)
+                             .map(role -> {
+                                 role.setId(entity.id());
+                                 role.setName(entity.name());
+                                 return roleRepository.save(role);
+                             })
+                             .map(mapper::roleDTO)
+                             .orElseThrow();
     }
 
     @Override
-    public Roles update(Long id, Roles entity) {
-
-        Optional<Roles> roleUpdate = roleRepository.findById(id);
-
-        Roles role = roleUpdate.get();
-
-        if(entity.getRole() != null){
-            role.setRole(entity.getRole());
-        }
-
-        return roleRepository.save(role);
-    }
-
-    @Override
-    public boolean delete(Long id) {
+    public boolean delete(final Long id) {
         roleRepository.deleteById(id);
-        return true;
+        return !roleRepository.existsById(id);
     }
-
 }

@@ -1,55 +1,62 @@
 package com.example.mastercode.entities;
 
+import com.example.mastercode.entities.common.AuditableEntity;
+import com.example.mastercode.entities.common.IdentificableEntity;
+import com.example.mastercode.entities.embedded.Auditable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.List;
 
 @Entity
-@JsonIgnoreProperties({"transactionList","employeesList"})
-@Table(name = "Enterprices")
-public class Enterprise implements Serializable {
+@JsonIgnoreProperties({"transactionList", "employeesList"})
+@Table(name = "enterprises", schema = "crudexample")
+public class Enterprise implements Serializable, IdentificableEntity, AuditableEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY
-
-    )
-    private Long idEnterprise; //enterprise id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; //enterprise id
     @Column(name = "name")
     private String name;//enterprise name
-    @Column(name = "nit")
+    @Column(name = "nit", unique = true, nullable = false)
+    @NaturalId
     private String nit;//enterprise nit
     @Column(name = "phone")
     private String phone;//enterprise phone
     @Column(name = "address")
     private String address;//enterprise address
-    @OneToMany(mappedBy = "enterprise")
-    private List<Employee> employeesList;//enterprise employee
-    @Column(name = "created_at")
-    private LocalDate created_at;  // transaction created date
-    @Column(name = "updated_at")
-    private LocalDate updated_at; // transacción updated date
 
-    public Enterprise(String name, String nit, String phone, String address, LocalDate created_at, LocalDate updated_at) {
-        this.name = name;
-        this.nit = nit;
-        this.phone = phone;
-        this.address = address;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
-    }
+    @Embedded
+    private Auditable auditable;
 
     public Enterprise() {
-
+        //default
     }
 
-    public Long getIdEnterprise() {
-        return idEnterprise;
+    @Override
+    public Auditable getAuditable() {
+        return auditable;
     }
 
-    public void setIdEnterprise(Long idEnterprise) {
-        this.idEnterprise = idEnterprise;
+    @Override
+    public void setAuditable(final Auditable auditable) {
+        this.auditable = auditable;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long idEnterprise) {
+        this.id = idEnterprise;
     }
 
     public String getName() {
@@ -84,43 +91,7 @@ public class Enterprise implements Serializable {
         this.address = address;
     }
 
-    public List<Employee> getEmployeesList() {
-        return employeesList;
-    }
 
-    public void setEmployeesList(List<Employee> employeesList) {
-        this.employeesList = employeesList;
-    }
-
-    public LocalDate getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(LocalDate created_at) {
-        this.created_at = created_at;
-    }
-
-    public LocalDate getUpdated_at() {
-        return updated_at;
-    }
-
-    public void setUpdated_at(LocalDate updated_at) {
-        this.updated_at = updated_at;
-    }
-
-    @Override
-    public String toString() {
-        return "Enterprise{" +
-                "idEnterprise=" + idEnterprise +
-                ", name='" + name + '\'' +
-                ", nit='" + nit + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
-                ", employeesList=" + employeesList +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
-                '}';
-    }
 }
 
 
