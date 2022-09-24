@@ -1,10 +1,14 @@
 package com.example.mastercode.controller;
 
 import com.example.mastercode.dto.EmployeeDto;
+import com.example.mastercode.dto.GeneralResponse;
 import com.example.mastercode.entities.Employee;
 import com.example.mastercode.services.Interface.EmployeeService;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,8 +30,22 @@ public class EmployeeController {
     }
 
     @PostMapping()
-    public Employee createEmployee(@RequestBody Employee request){
-        return instance.create(request);
+    public ResponseEntity createEmployee(@RequestBody Employee request){
+        GeneralResponse generalResponse = new GeneralResponse();
+
+        generalResponse.setDate(LocalDate.now());
+
+        try {
+            generalResponse.setStatus("ok");
+            generalResponse.setMessage(instance.create(request));
+
+            return ResponseEntity.ok(generalResponse);
+        }catch (DataIntegrityViolationException e){
+            generalResponse.setStatus("BadRequest");
+            generalResponse.setMessage(e.getMessage());
+            return ResponseEntity.badRequest().body(generalResponse);
+        }
+
     }
 
     @GetMapping("/{id}")

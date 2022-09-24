@@ -108,19 +108,7 @@ public class Enterprise implements Serializable {
         this.updated_at = updated_at;
     }
 
-    @Override
-    public String toString() {
-        return "Enterprise{" +
-                "idEnterprise=" + idEnterprise +
-                ", name='" + name + '\'' +
-                ", nit='" + nit + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
-                ", employeesList=" + employeesList +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
-                '}';
-    }
+
 }
 
 

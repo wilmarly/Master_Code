@@ -82,15 +82,4 @@ public class Transaction implements Serializable {
         this.updated_at = updated_at;
     }
 
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "id=" + idTransaction +
-                ", amount=" + amount +
-                ", concept='" + concept + '\'' +
-                ", employer=" + employee +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
-                '}';
-    }
 }

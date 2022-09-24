@@ -37,8 +37,4 @@ public class Roles implements Serializable {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "Roles{" + "idRole=" + idRole + ", role='" + role + '\'' + '}';
-    }
 }

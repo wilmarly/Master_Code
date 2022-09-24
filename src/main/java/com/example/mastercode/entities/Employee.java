@@ -20,7 +20,7 @@ public class Employee implements Serializable {
     @JoinColumn(name = "id_role")
     private Roles roles;//Employer roles
     @OneToOne
-    @JoinColumn(name = "id_profile")
+    @JoinColumn(name = "id_profile",unique = true)
     private Profile profile;//Employer profile
     @ManyToOne
     @JoinColumn(name = "id_enterprice")
@@ -109,18 +109,5 @@ public class Employee implements Serializable {
         this.updated_at = updated_at;
     }
 
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "idEmployee=" + idEmployee +
-                ", email='" + email + '\'' +
-                ", roles=" + roles +
-                ", profile=" + profile +
-                ", enterprise=" + enterprise +
-                ", transaction=" + transaction +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
-                '}';
-    }
 }
         
