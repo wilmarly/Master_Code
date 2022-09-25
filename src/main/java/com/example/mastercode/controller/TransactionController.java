@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("transaction")
+@RequestMapping("/rest/transaction")
 public class TransactionController {
     private final TransactionService instance;
 
@@ -27,10 +27,10 @@ public class TransactionController {
     }
 
 
-//    @PostMapping()
-//    public Transaction createTransaction(@RequestBody Transaction request)  {
-//        return instance.create(request);
-//    }
+    @PostMapping()
+    public Transaction createTransaction(@RequestBody Transaction request)  {
+        return instance.create(request);
+    }
 
     @GetMapping("/{id}")
     public Optional<TransactionDto> getTransactionId(@PathVariable Long id) {

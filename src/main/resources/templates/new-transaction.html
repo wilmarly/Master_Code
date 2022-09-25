@@ -11,18 +11,16 @@
 <body>
 <main>
   <div class="px-4 py-5 my-5 text-center">
-    <img src="img/transaction.png">
+    <img src="img/transaction.png" class="d-block mx-auto mb-4" height="100" alt="Transactions"/>
     <h1>Ingresa los datos de la transacción</h1>
-    <div>
+    <div class="col-lg-6 mx-auto">
       <form th:action="@{/transaction/new}" th:method="post" th:object="${transaction}">
         <input th:field="*{amount}" type="text"  id="amount" placeholder="amount">
         <input th:field="*{concept}" type="text" id="concept" placeholder="concept">
         <input th:field="*{employee}" type="text" id="employee" placeholder="employee">
         <input type="submit" value="Add">
       </form>
-    </div>
-    <div class="col-lg-6 mx-auto">
-      <a type="button" Class="btn btn-primary btn-lg px-4" href="/">Atrás</a>
+      <a type="button" Class="btn btn-primary btn-lg px-4 gap-3" href="/">Atrás</a>
     </div>
   </div>
 </main>

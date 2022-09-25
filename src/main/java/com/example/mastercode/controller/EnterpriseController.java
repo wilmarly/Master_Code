@@ -3,6 +3,7 @@ package com.example.mastercode.controller;
 import com.example.mastercode.dto.EnterpriseDto;
 import com.example.mastercode.dto.TransactionByEnterpriseResponse;
 import com.example.mastercode.entities.Enterprise;
+import com.example.mastercode.entities.Transaction;
 import com.example.mastercode.services.Interface.EnterpriseService;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("enterprise")
+@RequestMapping("/rest/enterprise")
 public class EnterpriseController {
     private final EnterpriseService instance;//Se inyecta la interfase
 
@@ -44,8 +45,8 @@ public class EnterpriseController {
         return instance.delete(id);
     }
     
-//    @GetMapping("/transaction_by_enterprise/{id}")
-//    public TransactionByEnterpriseResponse getTransactionByEnterprise(@PathVariable Long id){
-//        return instance.transactionByEnterprise(id);
-//    }
+    @GetMapping("/transaction_by_enterprise/{id}")
+    public TransactionByEnterpriseResponse getTransactionByEnterprise(@PathVariable Long id){
+        return instance.transactionByEnterprise(id);
+    }
 }
