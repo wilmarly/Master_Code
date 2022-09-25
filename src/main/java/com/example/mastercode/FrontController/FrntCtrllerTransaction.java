@@ -25,10 +25,9 @@ public class FrntCtrllerTransaction {
     }
 
     @PostMapping("/transaction/new")
-    public RedirectView createTransaction(@ModelAttribute @DateTimeFormat(pattern = "YY-MM-DD") Transaction transaction, Model model) {
-
+    public RedirectView createTransaction(@ModelAttribute @DateTimeFormat
+            (pattern = "YY-MM-DD") Transaction transaction, Model model) {
         model.addAttribute(transaction);
-
         this.instance.create(transaction);
 
         return new RedirectView("/transactions");
