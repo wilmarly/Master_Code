@@ -12,9 +12,7 @@ import java.util.List;
 @Table(name = "Enterprices")
 public class Enterprise implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY
-
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idEnterprise; //enterprise id
     @Column(name = "name")
     private String name;//enterprise name
@@ -107,7 +105,6 @@ public class Enterprise implements Serializable {
     public void setUpdated_at(LocalDate updated_at) {
         this.updated_at = updated_at;
     }
-
 
 }
 

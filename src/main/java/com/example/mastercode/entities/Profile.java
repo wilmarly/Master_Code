@@ -106,6 +106,4 @@ public class Profile implements Serializable {
         this.updated_at = updated_at;
     }
 
-
-
 }

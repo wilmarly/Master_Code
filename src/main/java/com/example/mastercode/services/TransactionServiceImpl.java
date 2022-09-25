@@ -6,6 +6,7 @@ import com.example.mastercode.repositories.TransactionRepository;
 import com.example.mastercode.services.Interface.TransactionService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,7 +51,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction create(Transaction entity) {
-
+        entity.setCreated_at(LocalDate.now());
+        entity.setUpdated_at(LocalDate.now());
         return transactionRepository.save(entity);
     }
 
