@@ -44,8 +44,8 @@ public class EnterpriseController {
         return instance.delete(id);
     }
     
-    @GetMapping("/transaction_by_enterprise/{id}")
-    public TransactionByEnterpriseResponse getTransactionByEnterprise(@PathVariable Long id){
-        return instance.transactionByEnterprise(id);
-    }
+//    @GetMapping("/transaction_by_enterprise/{id}")
+//    public TransactionByEnterpriseResponse getTransactionByEnterprise(@PathVariable Long id){
+//        return instance.transactionByEnterprise(id);
+//    }
 }

@@ -16,6 +16,10 @@
     <div class="container">
       <div Class="row">
         <div class="col">
+          <form th:action="@{/transactions/byenterpriseid}" th:method="post" th:object="${transaction}">
+            <input th:field="*{amount}" type="text"  id="amount" placeholder="amount">
+            <input type="submit" value="Add">
+          </form>
           <table class="table table-striped table-primary table-hover table-bordered border-primary table-sm">
             <thead>
             <tr>

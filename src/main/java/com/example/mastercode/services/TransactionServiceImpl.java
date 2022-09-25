@@ -51,8 +51,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction create(Transaction entity) {
-        entity.setCreated_at(LocalDate.now());
-        entity.setUpdated_at(LocalDate.now());
+//        entity.setCreated_at(LocalDate.now());
+//        entity.setUpdated_at(LocalDate.now());
         return transactionRepository.save(entity);
     }
 
