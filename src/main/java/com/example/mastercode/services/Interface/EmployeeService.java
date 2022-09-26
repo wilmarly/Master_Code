@@ -8,7 +8,7 @@ import java.util.List;
 public interface EmployeeService {
     List<EmployeeDto> findAll();
     EmployeeDto findById(Long idEmployee);
-    Employee create(Employee entity);
+    String create(Employee entity);
     Employee update(Long id, Employee entity);
     boolean delete(Long id);
 

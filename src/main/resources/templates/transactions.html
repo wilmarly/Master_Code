@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+  <title>Gestion de Transacciones</title>
+</head>
+<body>
+<main>
+  <div class="px-4 py-5 my-5 text-center">
+    <h1 class="d-block mx-auto mb-4">Transacciones</h1>
+    <div class="container">
+      <div Class="row">
+        <div class="col">
+          <table class="table table-striped table-primary table-hover table-bordered border-primary table-sm">
+            <thead>
+            <tr>
+              <th>Amount</th>
+              <th>Concept</th>
+              <th>Enterprise</th>
+              <th>Employee</th>
+              <th>created_at</th>
+              <th>updated_at</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="transaction : ${transactions}">
+              <td th:text="${transaction.amount}"> </td>
+              <td th:text="${transaction.concept}"> </td>
+              <td th:text="${transaction.enterprise}"> </td>
+              <td th:text="${transaction.employee}"> </td>
+              <td th:text="${transaction.created_at}"> </td>
+              <td th:text="${transaction.updated_at}"> </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 mx-auto">
+      <a type="button" Class="btn btn-primary btn-lg px-4" href="transactions/new">Agregar</a>
+      <a type="button" Class="btn btn-primary btn-lg px-4" href="/">Atrás</a>
+    </div>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+</body>
+</html>

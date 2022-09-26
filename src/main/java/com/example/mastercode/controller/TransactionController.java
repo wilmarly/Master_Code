@@ -3,14 +3,17 @@ package com.example.mastercode.controller;
 import com.example.mastercode.dto.TransactionDto;
 import com.example.mastercode.entities.Transaction;
 import com.example.mastercode.services.Interface.TransactionService;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("transaction")
+@RequestMapping("/rest/transaction")
 public class TransactionController {
     private final TransactionService instance;
 
@@ -26,7 +29,6 @@ public class TransactionController {
 
     @PostMapping()
     public Transaction createTransaction(@RequestBody Transaction request)  {
-        System.out.println(request);
         return instance.create(request);
     }
 

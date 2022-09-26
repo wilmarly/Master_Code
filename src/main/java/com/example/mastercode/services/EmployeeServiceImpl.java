@@ -4,6 +4,7 @@ import com.example.mastercode.dto.EmployeeDto;
 import com.example.mastercode.entities.Employee;
 import com.example.mastercode.repositories.EmployeeRepository;
 import com.example.mastercode.services.Interface.EmployeeService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -58,9 +59,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee create(Employee entity) {
+    public String create(Employee entity) {
 
-        return employeeRepository.save(entity);
+
+        try {
+            employeeRepository.save(entity);
+            return "Usuario creado correctamente";
+
+        } catch (DataIntegrityViolationException e) {
+
+            throw new DataIntegrityViolationException("El perfil ya esta asignado a un empleado");
+        }
+
     }
 
     @Override

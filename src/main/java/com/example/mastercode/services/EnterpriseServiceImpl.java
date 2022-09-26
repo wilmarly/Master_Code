@@ -4,6 +4,7 @@ import com.example.mastercode.dto.EnterpriseDto;
 import com.example.mastercode.dto.TransactionByEnterpriseResponse;
 import com.example.mastercode.dto.TransactionShortDto;
 import com.example.mastercode.entities.Enterprise;
+import com.example.mastercode.entities.Transaction;
 import com.example.mastercode.repositories.EnterpriseRepository;
 import com.example.mastercode.services.Interface.EnterpriseService;
 import org.springframework.stereotype.Service;
@@ -99,9 +100,9 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         if (entity.getUpdated_at() != null) {
             enterprise.setUpdated_at(entity.getUpdated_at());
         }
-        Enterprise responde = enterpriseRepository.save(enterprise);
+        Enterprise response = enterpriseRepository.save(enterprise);
 
-        return responde;
+        return response;
     }
 
     @Override

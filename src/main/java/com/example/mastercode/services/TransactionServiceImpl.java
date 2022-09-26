@@ -50,7 +50,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction create(Transaction entity) {
-
         return transactionRepository.save(entity);
     }
 
@@ -90,8 +89,9 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     public List<Transaction> getTransactionEmployee(Long idEmployee) {
-        return transactionRepository.findByTransactionIdEmployee(idEmployee);
+        return transactionRepository.findByEmployeeIdEmployee(idEmployee);
     }
+
 }
 
 

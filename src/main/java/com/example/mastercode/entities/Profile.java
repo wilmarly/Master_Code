@@ -1,10 +1,15 @@
 package com.example.mastercode.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
+@JsonIgnoreProperties("employee")
 @Table(name = "Profiles")
 public class Profile implements Serializable {
     @Id
@@ -18,16 +23,21 @@ public class Profile implements Serializable {
     private Integer age;//profile age
     @Column(name = "phone")
     private String phone;//profile phone
+    @OneToOne(mappedBy = "profile")
+    private Employee employee;
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDate created_at;//profile created date
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDate updated_at;//profile updated date
 
-    public Profile(String name, String lastName, Integer age, String phone, LocalDate created_at, LocalDate updated_at) {
+    public Profile(String name, String lastName, Integer age, String phone,Employee employee, LocalDate created_at, LocalDate updated_at) {
         this.name = name;
         this.lastName = lastName;
         this.age = age;
         this.phone = phone;
+        this.employee= employee;
         this.created_at = created_at;
         this.updated_at = updated_at;
     }
@@ -76,6 +86,14 @@ public class Profile implements Serializable {
         this.phone = phone;
     }
 
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
     public LocalDate getCreated_at() {
         return created_at;
     }
@@ -92,17 +110,4 @@ public class Profile implements Serializable {
         this.updated_at = updated_at;
     }
 
-
-    @Override
-    public String toString() {
-        return "Profile{" +
-                "id=" + idProfile +
-                ", name='" + name + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", age=" + age +
-                ", phone='" + phone + '\'' +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
-                '}';
-    }
 }

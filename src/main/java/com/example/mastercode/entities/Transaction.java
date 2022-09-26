@@ -1,5 +1,8 @@
 package com.example.mastercode.entities;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -17,8 +20,10 @@ public class Transaction implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_employee")
     private Employee employee;
+    @CreationTimestamp
     @Column(name = "created_at")
-    private LocalDate created_at;  // transaction created date
+    private LocalDate created_at;
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDate updated_at;  // transaction updated date
 
@@ -80,17 +85,5 @@ public class Transaction implements Serializable {
 
     public void setUpdated_at(LocalDate updated_at) {
         this.updated_at = updated_at;
-    }
-
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "id=" + idTransaction +
-                ", amount=" + amount +
-                ", concept='" + concept + '\'' +
-                ", employer=" + employee +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
-                '}';
     }
 }

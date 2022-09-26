@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("profile")
+@RequestMapping("/rest/profile")
 public class ProfileController {
 
     private final ProfileService instance;

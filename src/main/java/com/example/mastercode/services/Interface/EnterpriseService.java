@@ -3,6 +3,7 @@ package com.example.mastercode.services.Interface;
 import com.example.mastercode.dto.EnterpriseDto;
 import com.example.mastercode.dto.TransactionByEnterpriseResponse;
 import com.example.mastercode.entities.Enterprise;
+import com.example.mastercode.entities.Transaction;
 
 import java.util.List;
 
@@ -13,4 +14,5 @@ public interface EnterpriseService {
     Enterprise update(Long id, Enterprise entity);
     boolean delete (Long id);
     TransactionByEnterpriseResponse transactionByEnterprise(Long idEnterprises);
+
 }

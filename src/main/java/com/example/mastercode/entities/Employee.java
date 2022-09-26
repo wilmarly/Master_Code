@@ -1,6 +1,8 @@
 package com.example.mastercode.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,15 +22,17 @@ public class Employee implements Serializable {
     @JoinColumn(name = "id_role")
     private Roles roles;//Employer roles
     @OneToOne
-    @JoinColumn(name = "id_profile")
+    @JoinColumn(name = "id_profile",unique = true)
     private Profile profile;//Employer profile
     @ManyToOne
     @JoinColumn(name = "id_enterprice")
     private Enterprise enterprise;//Employer enterprice
     @OneToMany(mappedBy = "employee")
     private List<Transaction> transaction;
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDate created_at;//Employer created date
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDate updated_at;//Employer updated date
 
@@ -109,18 +113,5 @@ public class Employee implements Serializable {
         this.updated_at = updated_at;
     }
 
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "idEmployee=" + idEmployee +
-                ", email='" + email + '\'' +
-                ", roles=" + roles +
-                ", profile=" + profile +
-                ", enterprise=" + enterprise +
-                ", transaction=" + transaction +
-                ", created_at=" + created_at +
-                ", updated_at=" + updated_at +
-                '}';
-    }
 }
         
