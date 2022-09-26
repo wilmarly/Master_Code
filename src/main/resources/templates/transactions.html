@@ -27,7 +27,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="transaction : ${transactions}">
+            <tr th:each="transaction : ${transactionList}">
               <td th:text="${transaction.amount}"> </td>
               <td th:text="${transaction.concept}"> </td>
               <td th:text="${transaction.enterprise}"> </td>

@@ -91,7 +91,10 @@ public class TransactionServiceImpl implements TransactionService {
     public List<Transaction> getTransactionEmployee(Long idEmployee) {
         return transactionRepository.findByEmployeeIdEmployee(idEmployee);
     }
-
+    @Override
+    public List<Transaction> findAllByEnterprise(Long idEnterprise) {
+        return transactionRepository.allTransactionsByEnterprise(idEnterprise);
+    }
 }
 
 

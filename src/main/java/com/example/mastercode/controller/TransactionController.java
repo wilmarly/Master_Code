@@ -42,6 +42,11 @@ public class TransactionController {
         return instance.getTransactionEmployee(idEmployee);
     }
 
+    @GetMapping("/transaction-by-enterprise/{idEnterprise}")
+    public List<Transaction> getTransactionEnterprise(@PathVariable Long idEnterprise){
+        return instance.findAllByEnterprise(idEnterprise);
+    }
+
     @PatchMapping("/{id}")
     public Transaction modifyTransaction(@PathVariable Long id, @RequestBody Transaction transaction) {
         return instance.update(id, transaction);
