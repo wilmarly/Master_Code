@@ -1,7 +1,5 @@
 package com.example.mastercode.FrontController;
 
-import com.example.mastercode.dto.TransactionByEnterpriseResponse;
-import com.example.mastercode.dto.TransactionDto;
 import com.example.mastercode.entities.Transaction;
 import com.example.mastercode.services.Interface.TransactionService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,14 +15,29 @@ import java.util.List;
 
 
 @Controller
-public class FcTransaction {
+public class FcTransactionController {
 
     private final TransactionService instance;
 
-    public FcTransaction(TransactionService instance) {
+    public FcTransactionController(TransactionService instance) {
         this.instance = instance;
     }
 
+    //Crear una transaccion
+
+    @GetMapping("transactions/new")
+    public String newTransaction(Model model) {
+        model.addAttribute("transaction", new Transaction());
+        return "new-transaction";
+    }
+
+    @PostMapping("/transactions/new")
+    public RedirectView createTransaction(@ModelAttribute @DateTimeFormat
+            (pattern = "YY-MM-DD") Transaction transaction, Model model) {
+        model.addAttribute(transaction);
+        this.instance.create(transaction);
+        return new RedirectView("/transactions");
+    }
 
     @GetMapping("/transactions")
     private String Transactions (Model model){
@@ -32,18 +45,13 @@ public class FcTransaction {
         return "transactions";
     }
 
-    @PostMapping("/transaction/new")
-    public RedirectView createTransaction(@ModelAttribute @DateTimeFormat
-            (pattern = "YY-MM-DD") Transaction transaction, Model model) {
-        model.addAttribute(transaction);
-        this.instance.create(transaction);
+    @GetMapping("/enterprises/{id}/transactions")
+    public String getTransactionByEnterprise(@PathVariable("id") Long id, Model model){
 
-        return new RedirectView("/transactions");
-    }
+        List<Transaction> transaction = instance.findAllByEnterprise(id);
 
-    @GetMapping("transactions/new")
-    public String newTransaction(Model model) {
-        model.addAttribute("transaction", new Transaction());
-        return "new-transaction";
+        model.addAttribute("transactionList",transaction);
+
+        return "transactions";
     }
 }

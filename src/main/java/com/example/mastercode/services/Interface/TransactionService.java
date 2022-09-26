@@ -12,4 +12,5 @@ public interface TransactionService {
     Transaction update(Long id, Transaction entity);
     boolean delete (Long id);
     List<Transaction> getTransactionEmployee(Long idEmployee);
+    List<Transaction> findAllByEnterprise(Long idEnterprise);
 }

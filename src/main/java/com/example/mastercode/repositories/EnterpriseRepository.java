@@ -11,13 +11,4 @@ import java.util.List;
 
 @Repository
 public interface EnterpriseRepository extends JpaRepository<Enterprise, Long> {
-    @Query(value = """
-                    select t from Transaction t
-                    left join fetch t.employee e
-                    left join fetch e.enterprise ent
-                    where ent.nit = :nit
-                   """)
-    List<Transaction> allTransactionsByEnterprise(@Param("nit") String nit);
-
-
 }
