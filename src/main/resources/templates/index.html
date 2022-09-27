@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en"  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -18,6 +18,9 @@
             <p class="lead mb-4">We live by the ethos of kindness, gratitude, and positivity. We celebrate
                 self-empowerment, self-expression, and all aspects of life that encourage personal freedom.</p>
             <!-- Texto largo - </spam> texto corto -->
+            <div sec:authorize="!isAuthenticated()"><!--Pregunta si el usuatio está autenticado-->
+                <a type="button" class="btn btn-dark btn-lg px-4 gap-3" th:href="@{/oauth2/authorization/auth0}">Log In</a>
+            </div>
             <a type="button" class="btn btn-dark btn-lg px-4 gap-3" th:href="@{enterprises}">Enterprises List</a>
             <!-- Links -->
         </div>
