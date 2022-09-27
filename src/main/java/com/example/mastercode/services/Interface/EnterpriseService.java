@@ -12,7 +12,7 @@ public interface EnterpriseService {
     EnterpriseDto findById(Long id);
     Enterprise create(Enterprise entity);
     Enterprise update(Long id, Enterprise entity);
-    boolean delete (Long id);
+    void delete (Long id);
     TransactionByEnterpriseResponse transactionByEnterprise(Long idEnterprises);
 
 }

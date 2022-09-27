@@ -41,8 +41,8 @@ public class EnterpriseController {
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteEnterprise(@PathVariable Long id){
-        return instance.delete(id);
+    public void deleteEnterprise(@PathVariable Long id){
+        instance.delete(id);
     }
     
     @GetMapping("/transaction_by_enterprise/{id}")

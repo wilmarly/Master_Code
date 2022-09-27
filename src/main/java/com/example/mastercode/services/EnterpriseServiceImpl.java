@@ -4,7 +4,6 @@ import com.example.mastercode.dto.EnterpriseDto;
 import com.example.mastercode.dto.TransactionByEnterpriseResponse;
 import com.example.mastercode.dto.TransactionShortDto;
 import com.example.mastercode.entities.Enterprise;
-import com.example.mastercode.entities.Transaction;
 import com.example.mastercode.repositories.EnterpriseRepository;
 import com.example.mastercode.services.Interface.EnterpriseService;
 import org.springframework.stereotype.Service;
@@ -106,9 +105,9 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public void delete(Long id) {
         enterpriseRepository.deleteById(id);
-        return true;
+
     }
 
     @Override

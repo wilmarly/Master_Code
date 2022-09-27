@@ -1,31 +1,34 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-  <title>Master Code</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <title>New transaction</title>
 </head>
 <body>
 <main>
-  <div class="px-4 py-5 my-5 text-center">
-    <img src="../img/addTransaction.png" class="d-block mx-auto mb-4" height="100" alt="Transactions"/>
-    <h1 class="display-5 fw-bold">Ingresa los datos de la transacción</h1>
-    <div class="col-lg-4 mx-auto">
-      <form th:action="@{/transaction/new}" th:method="post" th:object="${transaction}">
-        <input th:field="*{amount}" type="text"  id="amount" placeholder="amount">
-        <input th:field="*{concept}" type="text" id="concept" placeholder="concept">
-        <input th:field="*{employee}" type="text" id="employee" placeholder="employee">
-        <div class="col-lg-6 mx-auto">
-          <input type="submit" value="Add" Class="btn btn-primary btn-lg px-4 gap-3">
-          <a type="button" Class="btn btn-primary btn-lg px-4 gap-3" href="/transactions">Atrás</a>
+    <div class="px-4 py-5 my-5 text-center">
+        <img src="../img/addTransaction.png" class="d-block mx-auto mb-4" height="100" alt="Transactions"/>
+        <h1 class="display-5 fw-bold">Ingresa los datos de la transacción</h1>
+        <div class="col-lg-4 mx-auto">
+            <form th:action="@{/transactions/new}" th:method="post" th:object="${transaction}">
+                <input th:field="*{amount}" type="text" id="amount" placeholder="amount">
+                <input th:field="*{concept}" type="text" id="concept" placeholder="concept">
+                <input th:field="*{employee}" type="text" id="employee" placeholder="employee">
+                <div class="col-lg-6 mx-auto">
+                    <input type="submit" value="Add" Class="btn btn-primary btn-lg px-4 gap-3">
+                    <a type="button" Class="btn btn-primary btn-lg px-4 gap-3" href="/transactions">Atrás</a>
+                </div>
+            </form>
         </div>
-      </form>
     </div>
-  </div>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
 </body>
 </html>
