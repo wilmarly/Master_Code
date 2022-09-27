@@ -21,7 +21,11 @@
             <div sec:authorize="!isAuthenticated()"><!--Pregunta si el usuatio está autenticado-->
                 <a type="button" class="btn btn-dark btn-lg px-4 gap-3" th:href="@{/oauth2/authorization/auth0}">Log In</a>
             </div>
-            <a type="button" class="btn btn-dark btn-lg px-4 gap-3" th:href="@{enterprises}">Enterprises List</a>
+            <div sec:authorize="isAuthenticated()">
+                <h1 th:text="'Bienvenido ' + ${user.getEmail()}"></h1>
+                <a type="button" class="btn btn-dark btn-lg px-4 gap-3" th:href="@{enterprises}">Enterprises List</a>
+            </div>
+
             <!-- Links -->
         </div>
     </div>
